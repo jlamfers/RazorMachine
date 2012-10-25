@@ -1,0 +1,14 @@
+﻿@using Xipton.Razor.Example.Models
+@model MyProductList
+
+@{Layout = null; // enforce to disable any layout setting
+}
+           
+@* intellisense should work at this template *@
+
+Product list:
+Name      Price
+---------------
+@foreach(var m in Model){
+    @m.Name @m.Price@br
+}

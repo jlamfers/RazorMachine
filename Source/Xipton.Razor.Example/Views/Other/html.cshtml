@@ -1,0 +1,23 @@
+﻿<html>
+
+    @{this.HtmlEncode = true; // default value can be configured}
+      
+    }
+    @*Razor 2 feature: root operator is resolved directly *@
+    <a href="~/someUrl"></a>
+
+    @*Razor 2 related feature: conditional attributes: attributes are not rendered if the correponding value is null or empty*@
+    @{
+        string nullValue = null;
+      }
+    <div data-firstname="@Model.FirstName" data-lastname="@Model.LastName" data-notRendered="@nullValue" data-notRenderedAsWell="@null"></div>
+
+    Hello @Model.FirstName @Model.LastName
+        
+    Hello Tom & Jerry
+    @("Hello Tom & Jerry")
+    @Raw("Hello Tom & Jerry")
+
+    The following C# code was generated for this template:
+    @Raw(GeneratedSourceCode)
+</html>
