@@ -5,7 +5,7 @@ using Xipton.Razor.Example.Models;
 namespace Xipton.Razor.Example {
     class Program {
 
-        // since the with the first examples we do not want to use any file content from the 
+        // since the with the first examples we do not want to use any file content from the
         // ./Views folder so we remove all content providers and thus the file content provider as well
         private static RazorMachine _rm = CreateRazorMachineWithoutContentProviders();
 

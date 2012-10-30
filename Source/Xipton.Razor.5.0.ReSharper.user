@@ -1,0 +1,56 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="TemplateBase`0" priority="0" />
+      <Item value="string" priority="0" />
+      <Item value="public" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="B6E046A6-4EBC-48EC-A454-8399AB3DD9AF/f:Program.cs" caret="237" fromTop="6" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/f:ITemplate.cs" caret="369" fromTop="7" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Core/d:ContentProvider/f:FileContentProvider.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Core/d:ContentProvider/f:MemoryContentProvider.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/f:TemplateBase`1.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/f:TemplateBase.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Extension/f:AppDomainExtension.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Extension/f:AssemblyExtension.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Extension/f:StringExtension.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Extension/f:ObjectExtension.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Core/d:ContentProvider/f:CompositeContentProvider.cs" caret="2995" fromTop="56" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Core/d:ContentProvider/f:EmbeddedResourceContentProvider.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Config/f:TemplatesElement.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Config/f:XElementExtension.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Config/f:XmlConfigurationSection.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Config/f:TemplateConfigurationException.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Config/f:RootOperatorElement.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Config/f:RazorConfig.cs" caret="7747" fromTop="119" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Core/d:Generator/d:CSharp/f:XiptonCSharpCodeLanguage.cs" caret="0" fromTop="0" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/d:Core/d:Generator/d:CSharp/f:XiptonCSharpCodeParser.cs" caret="0" fromTop="0" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/f:ITemplate.cs" caret="692" fromTop="15" />
+      <File id="3A7A2F2F-0B57-47F9-8E1A-D34ECB961831/f:ITemplate.cs" caret="369" fromTop="7" />
+      <File id="B6E046A6-4EBC-48EC-A454-8399AB3DD9AF/f:Program.cs" caret="237" fromTop="6" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+</Configuration>
