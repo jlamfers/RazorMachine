@@ -180,7 +180,7 @@ namespace Xipton.Razor
         #region ITemplateInternal
         ITemplateInternal ITemplateInternal.SetModel(object model)
         {
-            Model = TryWrapModel(model);
+            Model = DynamicData.ToDynamic(model);
             return this;
         }
         ITemplateInternal ITemplateInternal.SetViewBag(object viewBag)
@@ -533,19 +533,6 @@ namespace Xipton.Razor
             return (TModel)Model;
         }
 
-        /// <summary>
-        /// The model only needs to be wrapped into a IDynamicMetaObjectProvider if it is an emitted anonymous type.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        private static dynamic TryWrapModel(object model)
-        {
-            return model == null || !Attribute.IsDefined(model.GetType(), typeof(CompilerGeneratedAttribute))
-                       ? model
-                       : (model is IDynamicMetaObjectProvider
-                              ? model
-                              : new DynamicData(model));
-        }
     }
 
 

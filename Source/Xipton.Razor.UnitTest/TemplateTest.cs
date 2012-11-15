@@ -8,6 +8,12 @@ namespace Xipton.Razor.UnitTest
 {
     public class Person
     {
+        public class AddressType
+        {
+            public string Street { get; set; }
+        }
+
+        public AddressType Address { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }
@@ -16,6 +22,19 @@ namespace Xipton.Razor.UnitTest
     public class TemplateTest {
 
         // contains a few global unit tests
+
+        [Test]
+        public void NestedClassIsSupported(){
+            var t = new RazorMachine().Execute("@Model.Address.Street",new Person {Address = new Person.AddressType {Street = "Main Street"}});
+            Console.WriteLine(t.Result);
+
+            var t2 = new RazorMachine().Execute("@Model.Address.Street",new { Address = new Person.AddressType { Street = "Main Street" } });
+            Console.WriteLine(t2.Result);
+
+            var t3 = new RazorMachine().Execute("@Model.Address.Street",new { Address = new { Street = "Main Street" } });
+            Console.WriteLine(t3.Result);
+        }
+
 
 
         [Test]

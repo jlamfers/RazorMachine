@@ -5,11 +5,13 @@
  */
 #endregion
 
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Xipton.Razor.Core
 {
@@ -18,7 +20,7 @@ namespace Xipton.Razor.Core
     /// </summary>
     public class DynamicData : DynamicObject
     {
-        private readonly ConcurrentDictionary<string, object>
+        private readonly ConcurrentDictionary<string, dynamic>
             _data;
 
         public DynamicData(object target)
@@ -36,7 +38,7 @@ namespace Xipton.Razor.Core
                 return;
 
             foreach (var key in data.Keys)
-                _data[key.ToString()] = data[key];
+                _data[key.ToString()] = ToDynamic(data[key]);
         }
 
         public DynamicData(IEnumerable<KeyValuePair<string, object>> data = null)
@@ -44,8 +46,22 @@ namespace Xipton.Razor.Core
             _data = new ConcurrentDictionary<string, object>();
             if (data != null)
                 foreach (var pair in data)
-                    _data[pair.Key] = pair.Value;
+                    _data[pair.Key] = ToDynamic(pair.Value);
         }
+
+        /// <summary>
+        /// The model only needs to be wrapped into a IDynamicMetaObjectProvider if it is an emitted anonymous type.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        public static dynamic ToDynamic(object model) {
+            return model == null || !Attribute.IsDefined(model.GetType(), typeof(CompilerGeneratedAttribute))
+                       ? model
+                       : (model is IDynamicMetaObjectProvider
+                              ? model
+                              : new DynamicData(model));
+        }
+
 
         public override IEnumerable<string> GetDynamicMemberNames()
         {
@@ -54,21 +70,13 @@ namespace Xipton.Razor.Core
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = null;
-
-            return binder != null && _data.TryGetValue(binder.Name, out result);
+            return _data.TryGetValue(binder.Name, out result);
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            if (binder != null)
-            {
-                _data[binder.Name] = value;
-
-                return true;
-            }
-
-            return false;
+            _data[binder.Name] = value;
+            return true;
         }
 
 
