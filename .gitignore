@@ -1,6 +1,7 @@
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 bin
 obj
+_*
 
 # mstest test results
 TestResults
@@ -48,3 +49,4 @@ TestResults
 Icon?
 ehthumbs.db
 Thumbs.db
+

@@ -41,10 +41,11 @@ namespace Xipton.Razor
                 return this;
             }
 
-            public override string ToString()
-            {
-                return "{0}".FormatWith(_arg != null ? _arg.Item2.Item1 : default(T));
+            public override string ToString() {
+                return "{0}{1}".FormatWith(_arg.Item1.Item1, _arg.Item2.Item1);
             }
+
+
         }
 
         #endregion
