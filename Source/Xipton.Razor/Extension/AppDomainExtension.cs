@@ -17,17 +17,17 @@ namespace Xipton.Razor.Extension {
         private static bool _binAssembliesLoadedBefore;
 
         /// <summary>
-        /// Assures that the required xipton assemblies are loaded in the excution context.
+        /// Ensures that the required xipton assemblies are loaded in the excution context.
         /// </summary>
-        public static AppDomain AssureXiptonAssembliesLoaded(this AppDomain domain) {
+        public static AppDomain EnsureXiptonAssembliesLoaded(this AppDomain domain) {
             typeof(ParserResults).GetType();
             return domain;
         }
 
         /// <summary>
-        /// Assures that all assemblies in the bin folder have been loaded into the excution context.
+        /// Ensures that all assemblies in the bin folder have been loaded into the excution context.
         /// </summary>
-        public static AppDomain AssureBinAssembliesLoaded(this AppDomain domain) {
+        public static AppDomain EnsureBinAssembliesLoaded(this AppDomain domain) {
 
             if (_binAssembliesLoadedBefore)
                 return domain;
@@ -39,14 +39,14 @@ namespace Xipton.Razor.Extension {
             Directory.GetFiles(binFolder, "*.dll")
                 .Union(Directory.GetFiles(binFolder, "*.exe"))
                 .ToList()
-                .ForEach(AssureAssemblyLoaded);
+                .ForEach(EnsureAssemblyLoaded);
 
             _binAssembliesLoadedBefore = true;
 
             return domain;
         }
 
-        private static void AssureAssemblyLoaded(string assemblyFileName){
+        private static void EnsureAssemblyLoaded(string assemblyFileName){
             var assemblyName = AssemblyName.GetAssemblyName(assemblyFileName);
             if (!AppDomain.CurrentDomain.GetAssemblies().Any(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName()))){
                 Assembly.Load(assemblyName);

@@ -12,6 +12,7 @@ TestResults
 # User files #
 ###################
 *.user
+*.suo
 
 
 # Logs and databases #

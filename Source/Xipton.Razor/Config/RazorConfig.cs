@@ -232,10 +232,10 @@ namespace Xipton.Razor.Config {
                 // no need to resolve references
                 return;
 
-            // assure xipton assemblies as well as all bin assemblies to be loaded in the execution context
+            // ensure xipton assemblies as well as all bin assemblies to be loaded in the execution context
             AppDomain.CurrentDomain
-                .AssureXiptonAssembliesLoaded()
-                .AssureBinAssembliesLoaded();
+                .EnsureXiptonAssembliesLoaded()
+                .EnsureBinAssembliesLoaded();
 
             var domainAssemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
@@ -253,7 +253,7 @@ namespace Xipton.Razor.Config {
                         !referenceName.Contains("*") &&
                         !referencedAssemblyFileNames.Any(filename => filename
                             .TrimEnd()
-                            .EndsWith(AssureLeadingBackSlash(referenceName), StringComparison.OrdinalIgnoreCase)
+                            .EndsWith(EnsureLeadingBackSlash(referenceName), StringComparison.OrdinalIgnoreCase)
                          )
                     )
                     .Concat(
@@ -272,7 +272,7 @@ namespace Xipton.Razor.Config {
                 );
             }
         }
-        private static string AssureLeadingBackSlash(string referenceName){
+        private static string EnsureLeadingBackSlash(string referenceName){
             if (referenceName == null) throw new ArgumentNullException("referenceName");
             return referenceName.Contains("\\") ? referenceName : "\\" + referenceName;
         }

@@ -55,7 +55,7 @@ namespace Xipton.Razor.Core.ContentProvider
             if (string.IsNullOrEmpty(virtualPath)) return null;
             var file = new FileInfo(Path.Combine(_rootFolder, virtualPath.RemoveRoot()).Replace("/","\\"));
             if (!file.Exists) return null;
-            AssureWatcherInitialized();
+            EnsureWatcherInitialized();
             return file.FullName;
         }
 
@@ -95,7 +95,7 @@ namespace Xipton.Razor.Core.ContentProvider
 
         #region FileWatcher
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "_watcher is disposed on FileContentProvider.Dispose()")]
-        private void AssureWatcherInitialized()
+        private void EnsureWatcherInitialized()
         {
             lock (_syncRoot)
             {

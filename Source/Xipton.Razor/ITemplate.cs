@@ -73,8 +73,8 @@ namespace Xipton.Razor
         // Writes a literal string, never encoded
         void WriteLiteral(object value);
 
-        // Ensures the value to be written as a raw string. It always must return null. 
-        // Since it returns a string type you can invoke it like: @Raw("a & b")
+        // Ensures the value to be written as a raw string. 
+        // You can invoke it like: @Raw("a & b")
         LiteralString Raw(string value);
 
     }

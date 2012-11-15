@@ -126,7 +126,7 @@ namespace Xipton.Razor.Example {
 
         //Example 8 - HTML encoding
         public static void Example8() {
-            _rm.RegisterTemplate("~/shared/_layout.cshtml", "@RenderBody()"); // replace _layout by "RenderBody only" template to assure output
+            _rm.RegisterTemplate("~/shared/_layout.cshtml", "@RenderBody()"); // replace _layout by "RenderBody only" template to ensure output
 
             // not encoded since all output is literal content
             Console.WriteLine(_rm.ExecuteContent("Tom & Jerry").Result);
