@@ -24,15 +24,24 @@ namespace Xipton.Razor.UnitTest
         // contains a few global unit tests
 
         [Test]
-        public void NestedClassIsSupported(){
-            var t = new RazorMachine().Execute("@Model.Address.Street",new Person {Address = new Person.AddressType {Street = "Main Street"}});
-            Console.WriteLine(t.Result);
+        public void SpacesArePreservedWithinAttributes(){
+            var m = new RazorMachine();
+            var t = m.ExecuteContent("<Tag attribute=\"@Model.FirstName   @Model.LastName\"></Tag>", new { FirstName = "John", LastName = "Smith" });
+            Assert.AreEqual("<Tag attribute=\"John   Smith\"></Tag>", t.Result);
+        }
 
-            var t2 = new RazorMachine().Execute("@Model.Address.Street",new { Address = new Person.AddressType { Street = "Main Street" } });
-            Console.WriteLine(t2.Result);
+        [Test]
+        public void NestedAnonymousTypesAreSupported(){
+            var m = new RazorMachine();
+            const string streetName = "Main Street";
+            var t = m.Execute("@Model.Address.Street",new Person {Address = new Person.AddressType {Street = streetName}});
+            Assert.AreEqual(streetName,t.Result);
 
-            var t3 = new RazorMachine().Execute("@Model.Address.Street",new { Address = new { Street = "Main Street" } });
-            Console.WriteLine(t3.Result);
+            t = m.Execute("@Model.Address.Street",new { Address = new Person.AddressType { Street = streetName } });
+            Assert.AreEqual(streetName, t.Result);
+
+            t = m.Execute("@Model.Address.Street",new { Address = new { Street = streetName } });
+            Assert.AreEqual(streetName, t.Result);
         }
 
 

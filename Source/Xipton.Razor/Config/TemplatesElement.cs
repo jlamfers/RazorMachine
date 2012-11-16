@@ -1,11 +1,12 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Web.Razor;
 using System.Xml.Linq;
 using Xipton.Razor.Core.Generator;
@@ -70,7 +71,8 @@ namespace Xipton.Razor.Config
         public string NonGenericBaseTypeName {
             get {
                 var fullname = BaseType.FullName;
-                var index = fullname.IndexOf('`');
+                var index = fullname == null ? -1 : fullname.IndexOf('`');
+                Debug.Assert(fullname != null, "fullname != null");
                 return index < 0 ? fullname : fullname.Substring(0, index);
             }
         }
@@ -128,7 +130,7 @@ namespace Xipton.Razor.Config
             if (!baseType.IsGenericTypeDefinition || baseType.GetGenericArguments().Length != 1)
                 throw new TemplateConfigurationException("BaseType must be an open generic type (or have a subclass that is a generic type) with one generic parameter (for TModel).");
 
-            if (baseType.BaseType.IsGenericType || !typeof(TemplateBase).IsAssignableFrom(baseType.BaseType))
+            if (baseType.BaseType == null ||  baseType.BaseType.IsGenericType || !typeof(TemplateBase).IsAssignableFrom(baseType.BaseType))
                 throw new TemplateConfigurationException("BaseType must inherit a non generic (custom) basetype that must be a subclass of {0}.".FormatWith(typeof(TemplateBase)));
 
             if (baseType.BaseType.Name != baseType.Name.Substring(0, baseType.Name.Length - 2))

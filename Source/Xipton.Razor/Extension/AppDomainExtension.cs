@@ -1,11 +1,12 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,13 +15,16 @@ using System.Web.Razor;
 namespace Xipton.Razor.Extension {
     public static class AppDomainExtension {
 
-        private static bool _binAssembliesLoadedBefore;
+        private static readonly ConcurrentDictionary<string,bool> 
+            _binAssembliesLoadedBefore = new ConcurrentDictionary<string, bool>();
 
         /// <summary>
         /// Ensures that the required xipton assemblies are loaded in the excution context.
         /// </summary>
         public static AppDomain EnsureXiptonAssembliesLoaded(this AppDomain domain) {
-            typeof(ParserResults).GetType();
+#pragma warning disable 168
+            var t = typeof(ParserResults);
+#pragma warning restore 168
             return domain;
         }
 
@@ -29,7 +33,7 @@ namespace Xipton.Razor.Extension {
         /// </summary>
         public static AppDomain EnsureBinAssembliesLoaded(this AppDomain domain) {
 
-            if (_binAssembliesLoadedBefore)
+            if (_binAssembliesLoadedBefore.ContainsKey(domain.FriendlyName))
                 return domain;
 
             var binFolder = !string.IsNullOrEmpty(domain.RelativeSearchPath)
@@ -39,19 +43,30 @@ namespace Xipton.Razor.Extension {
             Directory.GetFiles(binFolder, "*.dll")
                 .Union(Directory.GetFiles(binFolder, "*.exe"))
                 .ToList()
-                .ForEach(EnsureAssemblyLoaded);
+                .ForEach(domain.EnsureAssemblyIsLoaded);
 
-            _binAssembliesLoadedBefore = true;
+            _binAssembliesLoadedBefore[domain.FriendlyName] = true;
 
             return domain;
         }
 
-        private static void EnsureAssemblyLoaded(string assemblyFileName){
+        public static Assembly GetOrLoadAssembly(this AppDomain domain, string assemblyFileNameOrAssemblyDisplayName) {
+            var assemblyName = assemblyFileNameOrAssemblyDisplayName.IsFileName()
+                ? AssemblyName.GetAssemblyName(assemblyFileNameOrAssemblyDisplayName)
+                : new AssemblyName(assemblyFileNameOrAssemblyDisplayName);
+            return domain
+                .GetAssemblies()
+                .FirstOrDefault(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName())) ?? domain.Load(assemblyName);
+        }
+
+        private static void EnsureAssemblyIsLoaded(this AppDomain domain, string assemblyFileName) {
             var assemblyName = AssemblyName.GetAssemblyName(assemblyFileName);
-            if (!AppDomain.CurrentDomain.GetAssemblies().Any(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName()))){
-                Assembly.Load(assemblyName);
+            if (!domain.GetAssemblies().Any(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName()))) {
+                domain.Load(assemblyName);
             }
         }
+
+
 
     }
 }

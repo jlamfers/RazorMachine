@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -212,7 +212,7 @@ namespace Xipton.Razor.Core
                     sb.Append(_builder.ToString(parts[i].Start, parts[i].Length));
                 }
                 _builder.Clear();
-                _builder.Append(sb.ToString());
+                _builder.Append(sb);
             }
             if (_builder.Length > 1)
                 RemoveTrailingSlash();

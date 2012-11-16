@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -45,7 +45,10 @@ namespace Xipton.Razor.Extension
         }
 
         public static string MakeAbsoluteDirectoryPath(this string path){
-            return Path.Combine(Path.GetDirectoryName(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile), path ?? ".");
+            var baseDir = Path.GetDirectoryName(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+            if (baseDir == null)
+                return path;
+            return Path.Combine(baseDir, path ?? ".");
         }
 
         public static string HtmlEncode(this string value)

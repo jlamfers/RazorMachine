@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -153,9 +153,10 @@ namespace Xipton.Razor.Config {
 
                 var rootDescendents = config.Descendants(_rootElementName);
 
+                var xElements = rootDescendents as XElement[] ?? rootDescendents.ToArray();
                 RootOperator = ConfigElement
                     .Create<RootOperatorElement>()
-                    .TryLoadElement(rootDescendents
+                    .TryLoadElement(xElements
                         .Descendants("rootOperator")
                         .SingleOrDefault()
                      )
@@ -163,17 +164,17 @@ namespace Xipton.Razor.Config {
 
                 Templates = ConfigElement
                     .Create<TemplatesElement>()
-                    .TryLoadElement(rootDescendents
+                    .TryLoadElement(xElements
                         .Descendants("templates")
                         .SingleOrDefault()
                      )
                     .CastTo<TemplatesElement>();
 
-                Namespaces = rootDescendents.HasClearChildElement("namespaces") ? new List<string>() : CreateDefaultNamespaces();
-                References = rootDescendents.HasClearChildElement("references") ? new List<string>() : CreateDefaultReferences();
-                ContentProviders = rootDescendents.HasClearChildElement("contentProviders") ? new List<Func<IContentProvider>>() : CreateDefaultContentProviders();
+                Namespaces = xElements.HasClearChildElement("namespaces") ? new List<string>() : CreateDefaultNamespaces();
+                References = xElements.HasClearChildElement("references") ? new List<string>() : CreateDefaultReferences();
+                ContentProviders = xElements.HasClearChildElement("contentProviders") ? new List<Func<IContentProvider>>() : CreateDefaultContentProviders();
 
-                Namespaces = rootDescendents
+                Namespaces = xElements
                     .Descendants("namespaces")
                     .SingleOrDefault(new XElement("namespaces"))
                     .Descendants("add")
@@ -182,7 +183,7 @@ namespace Xipton.Razor.Config {
                     .ToList()
                     .AsReadOnly();
 
-                References = rootDescendents
+                References = xElements
                     .Descendants("references")
                     .SingleOrDefault(new XElement("references"))
                     .Descendants("add")
@@ -194,7 +195,7 @@ namespace Xipton.Razor.Config {
                 TryResolveWildcardReferences();
 
                 var contentProviderElements = 
-                    rootDescendents
+                    xElements
                     .Descendants("contentProviders")
                     .SingleOrDefault(new XElement("contentProviders"))
                     .Descendants("add");
@@ -239,7 +240,7 @@ namespace Xipton.Razor.Config {
 
             var domainAssemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(a => !a.IsDynamic && a.FullName != null)
+                .Where(a => !a.IsDynamic)
                 .ToList();
 
             var referencedAssemblyFileNames = new List<string>();

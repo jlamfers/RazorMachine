@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -30,12 +30,15 @@ namespace Xipton.Razor.Core
         #region Types
         private class CacheBucket
         {
-            public Type GeneratedTemplateType;
-            public string GeneratedSourceCode;
+            public CacheBucket(Type generatedTemplateType){
+                GeneratedTemplateType = generatedTemplateType;
+            }
+            public Type GeneratedTemplateType { get; private set; }
+            public string GeneratedSourceCode { get; set; }
 
             public override bool Equals(object obj) {
                 var other = obj as CacheBucket;
-                return other != null && Equals(other.GeneratedTemplateType, GeneratedTemplateType);
+                return other != null && other.GeneratedTemplateType == GeneratedTemplateType;
             }
             public override int GetHashCode() {
                 return GeneratedTemplateType == null ? 0 : GeneratedTemplateType.GetHashCode();
@@ -141,7 +144,7 @@ namespace Xipton.Razor.Core
             GetClassName(virtualPath, out rootNamespace, out className);
             string generatedSource;
             var assembly = CreateAssembly(resourceName, @rootNamespace, className, content, out generatedSource);
-            return new CacheBucket { GeneratedTemplateType = assembly.GetType(rootNamespace + "." + className, true, false), GeneratedSourceCode = generatedSource };
+            return new CacheBucket(assembly.GetType(rootNamespace + "." + className, true, false)){GeneratedSourceCode = generatedSource };
         }
 
         private Assembly CreateAssembly(string resourceName, string rootNamespace, string className, string content, out string generatedSource)
@@ -189,7 +192,7 @@ namespace Xipton.Razor.Core
                 
             }
             className = sb.ToString();
-            var index = className.LastIndexOf(".");
+            var index = className.LastIndexOf(".", StringComparison.Ordinal);
             if (index == -1)
             {
                 @namespace = _razorEngine.Host.DefaultNamespace;

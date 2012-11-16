@@ -3,7 +3,7 @@
 #pragma warning disable 67
 
 #region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -67,21 +67,13 @@ namespace Xipton.Razor.Core.ContentProvider
         public IContentProvider InitFromConfig(XElement element){
             var resourceAssembly = element.GetAttributeValue("resourceAssembly", false);
             if (resourceAssembly != null)
-                _resourceAssembly = LoadAssembly(resourceAssembly);
+                _resourceAssembly = AppDomain.CurrentDomain.GetOrLoadAssembly(resourceAssembly);
             _rootNameSpace = element.GetAttributeValue("rootNameSpace", false) ?? _rootNameSpace;
             if (_resourceAssembly == null) throw new TemplateConfigurationException("{0}: attribute resourceAssembly is required and not allowed null".FormatWith(element));
             if (_rootNameSpace == null) throw new TemplateConfigurationException("{0}: attribute rootNameSpace is required and not allowed null".FormatWith(element));
             return this;
         }
 
-        private static Assembly LoadAssembly(string name) {
-            var assemblyName = name.IsFileName()
-                ? AssemblyName.GetAssemblyName(name)
-                : new AssemblyName(name);
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName()))
-                .FirstOrDefault() ?? Assembly.Load(assemblyName);
-        }
 
 
         #endregion
@@ -92,7 +84,7 @@ namespace Xipton.Razor.Core.ContentProvider
             if (s1.Length != resourceName.Length)
                 return false;
             s1 = s1.Replace("-", "_");
-            return string.Compare(s1, resourceName, true) == 0;
+            return string.Compare(s1, resourceName, StringComparison.OrdinalIgnoreCase) == 0;
         }
 
 

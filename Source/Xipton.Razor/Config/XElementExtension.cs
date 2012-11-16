@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -27,11 +27,13 @@ namespace Xipton.Razor.Config {
 
         // convenience implementation for fluency reasons and being able to report a clear configuration error
         public static XElement SingleOrDefault(this IEnumerable<XElement> elements, XElement defaultValue) {
-            if (elements == null || elements.Count() == 0)
+            if (elements == null) return defaultValue;
+            var xElements = elements as XElement[] ?? elements.ToArray();
+            if (xElements.Length == 0)
                 return defaultValue;
-            if (elements.Count() > 1)
-                throw new TemplateConfigurationException("More that one element named '{0}' found at your configuration.".FormatWith(elements.First().Name));
-            return elements.Single();
+            if (xElements.Length > 1)
+                throw new TemplateConfigurationException("More that one element named '{0}' found at your configuration.".FormatWith(xElements.First().Name));
+            return xElements[0];
         }
 
         public static bool HasClearChildElement(this IEnumerable<XElement> root, string parentName) {

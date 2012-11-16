@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.3
+/* This code is part of Xipton.Razor v2.4
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -31,7 +31,7 @@ namespace Xipton.Razor.Core.Generator.VB
         protected virtual bool ModelStatement()
         {
             Span.CodeGenerator = SpanCodeGenerator.Null;
-            Context.CurrentBlock.Type = new BlockType?(BlockType.Directive);
+            Context.CurrentBlock.Type = BlockType.Directive;
             AcceptAndMoveNext();
             var currentLocation = CurrentLocation;
             if (At(VBSymbolType.WhiteSpace))
