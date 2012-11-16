@@ -75,7 +75,7 @@ namespace Xipton.Razor.Core
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            _data[binder.Name] = value;
+            _data[binder.Name] = ToDynamic(value);
             return true;
         }
 
