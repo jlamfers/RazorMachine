@@ -21,8 +21,6 @@ namespace Xipton.Razor.UnitTest
     [TestFixture]
     public class TemplateTest {
 
-        // contains a few global unit tests
-
         [Test]
         public void SpacesArePreservedWithinAttributes(){
             var m = new RazorMachine();
