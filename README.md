@@ -1,5 +1,4 @@
-RazorMachine
-============
+## RazorMachine ###
 
 A really easy to use .Net Razor 2 template engine. This implementation supports layouts (masterpages) and a _viewStart construct, just like MVC does support these features. The RazorEngine works independently from MVC. It only needs the System.Web.Razor reference. It almost works exacly like Asp.Net MVC. Take a look at the <a href="https://github.com/jlamfers/RazorMachine/wiki/Examples" target="_blank">examples at the wiki</a> to see how easy this framework works.
 
@@ -7,7 +6,7 @@ This RazorEngine originally was published at the <a href="http://www.codeproject
 
 ## Install ##
 
-To install RazorMachine, run the following command in the [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console):
+There is a package available at NuGet. To install RazorMachine using NuGet, run the following command in the <a href="http://docs.nuget.org/docs/start-here/using-the-package-manager-console" target="_blank">Package Manager Console</a>
 ```
 PM> Install-Package RazorMachine
 ```
