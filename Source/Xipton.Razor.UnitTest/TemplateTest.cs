@@ -22,6 +22,42 @@ namespace Xipton.Razor.UnitTest
     public class TemplateTest {
 
         [Test]
+        public void HelperWorks() {
+            var rm = new RazorMachine();
+            rm.RegisterTemplate("/helper", @"
+@functions {
+   static int _counter = 1;
+   int GetId(){return _counter++;}
+}
+@helper _DoStuff(){
+<div>
+   Some literal content
+   @GetId()
+   @GetId()
+   @GetId()
+</div>
+}
+@helper _DoStuffAgain(){
+<div>
+   Some literal content
+   @GetId()
+   @GetId()
+   @GetId()
+</div>
+}
+@_DoStuff()
+@_DoStuffAgain()
+@_DoStuff()
+@_DoStuffAgain()
+");
+
+            //@functions {
+            //   int GetId(){return 1;}
+            //}
+            var result = rm.Execute("/helper");
+        }
+
+        [Test]
         public void SpacesArePreservedWithinAttributes(){
             var m = new RazorMachine();
             var t = m.ExecuteContent("<Tag attribute=\"@Model.FirstName   @Model.LastName\"></Tag>", new { FirstName = "John", LastName = "Smith" });

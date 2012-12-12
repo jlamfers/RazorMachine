@@ -51,10 +51,10 @@ namespace Xipton.Razor.Core.Generator
             // the GeneratedClassContext defines the methods that are generated to handle the template 
             // control like writing the generated output and also handle other control operations like 
             // defining sections inside the template
-            _generatedClassContext = new GeneratedClassContext("Execute", "Write", "WriteLiteral", null, null, null, "DefineSection")
-            {
+            _generatedClassContext = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection") {
                 ResolveUrlMethodName = "ResolveUrl"
             };
+
         }
 
         public override string DefaultBaseClass

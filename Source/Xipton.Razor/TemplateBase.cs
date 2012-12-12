@@ -8,7 +8,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Dynamic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.CSharp.RuntimeBinder;
@@ -156,7 +158,7 @@ namespace Xipton.Razor
                 return;
             }
 
-            var literal = value as LiteralString;
+            var literal = value as ILiteralString;
             if (literal != null){
                 WriteLiteral(literal);
                 return;
@@ -167,6 +169,24 @@ namespace Xipton.Razor
         public virtual void WriteLiteral(object value)
         {
             _outputTarget.Append(value);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void WriteTo(TextWriter writer, object value) {
+            if (value == null) return;
+            var literal = value as ILiteralString;
+            if (literal != null) {
+                WriteLiteralTo(writer, literal);
+                return;
+            }
+            var text = value as string ?? value.ToString();
+            WriteLiteralTo(writer, text.HtmlEncode());
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void WriteLiteralTo(TextWriter writer, object value) {
+            if (value != null)
+                writer.Write(value);
         }
 
         protected virtual void DefineSection(string name, Action action)

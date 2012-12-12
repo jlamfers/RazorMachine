@@ -58,6 +58,7 @@
     <Compile Include="Config\XElementExtension.cs" />
     <Compile Include="Config\RazorConfig.cs" />
     <Compile Include="Config\TemplateConfigurationException.cs" />
+    <Compile Include="Core\HelperResult.cs" />
     <Compile Include="Extension\AppDomainExtension.cs" />
     <Compile Include="Core\ContentModifiedArgs.cs" />
     <Compile Include="Core\ContentProvider\CompositeContentProvider.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Extension\AssemblyExtension.cs" />
     <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="Extension\TypeExtension.cs" />
+    <Compile Include="ILiteralString.cs" />
     <Compile Include="ITemplate`1.cs" />
     <Compile Include="LiteralString.cs" />
     <Compile Include="TemplateBase`1.cs" />

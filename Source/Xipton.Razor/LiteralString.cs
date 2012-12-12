@@ -11,7 +11,7 @@ namespace Xipton.Razor {
     /// <summary>
     /// a LiteralString represents a string that should not be encoded (again)
     /// </summary>
-    public class LiteralString{
+    public class LiteralString : ILiteralString {
 
         private readonly string 
             _literalString;
