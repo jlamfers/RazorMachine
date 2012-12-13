@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.CSharp.RuntimeBinder;
 using Xipton.Razor.Core;
@@ -174,6 +173,10 @@ namespace Xipton.Razor
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void WriteTo(TextWriter writer, object value) {
             if (value == null) return;
+            if (!HtmlEncode) {
+                WriteLiteralTo(writer,value);
+                return;
+            }
             var literal = value as ILiteralString;
             if (literal != null) {
                 WriteLiteralTo(writer, literal);
