@@ -81,9 +81,6 @@ namespace Xipton.Razor
                 ));
         }
 
-        public RazorMachine(RazorConfig config){
-            Context = new RazorContext(config);
-        }
         #endregion
 
         /// <summary>

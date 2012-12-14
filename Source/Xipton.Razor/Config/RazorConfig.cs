@@ -20,7 +20,7 @@ using Xipton.Razor.Extension;
 
 namespace Xipton.Razor.Config {
     /// <summary>
-    /// Holds all configuration settings. You may initialize the configuration by default, or by an xml string / xml file name, or by explicit arguments, and/or by another GeneratorConfig object.
+    /// Holds all configuration settings. The configuration is initialized together with the RazorMachine class.
     /// 
     /// If the configuration is initialized by default (with no parameters) it is checked if a configuration section exists at 
     /// the default application's configuration named xipton.razor.config. If such a section exists then that configuration is used. Else the configuration
