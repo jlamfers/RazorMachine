@@ -24,10 +24,13 @@ namespace Xipton.Razor.UnitTest
         [Test]
         public void HelperWorks() {
             var rm = new RazorMachine();
-            rm.RegisterTemplate("/helper", @"
+            rm.RegisterTemplate("/1/helper", @"
 @functions {
    static int _counter = 1;
    int GetId(){return _counter++;}
+}
+@helper AttributeStuff(string setting, string null_value=null){
+   <tag value=""@setting"" value2=""@setting  @setting"" hidden=""@null_value""/>
 }
 @helper _DoStuff(){
 <div>
@@ -49,12 +52,11 @@ namespace Xipton.Razor.UnitTest
 @_DoStuffAgain()
 @_DoStuff()
 @_DoStuffAgain()
+@AttributeStuff(""yep"")
 ");
 
-            //@functions {
-            //   int GetId(){return 1;}
-            //}
-            var result = rm.Execute("/helper");
+            var result = rm.Execute("/1/helper");
+            Debug.WriteLine(result.Result);
         }
 
         [Test]

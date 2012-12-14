@@ -183,13 +183,24 @@ namespace Xipton.Razor.Core
                 .ToString()
                 .RemoveRoot();
             var sb = new StringBuilder();
+            bool firstTokenChar = true;
             foreach(var ch in virtualTemplatePath)
             {
-                if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch=='_')
+                if (ch >= '0' && ch <= '9'){
+                    if (firstTokenChar)
+                        sb.Append('_');
                     sb.Append(ch);
-                else if (ch == '/')
+                    firstTokenChar = false;
+                }
+                else if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_'){
+                    sb.Append(firstTokenChar ? char.ToUpper(ch) : ch);
+                    firstTokenChar = false;
+                }
+                else if (ch == '/'){
                     sb.Append('.');
-                
+                    firstTokenChar = true;
+                }
+
             }
             className = sb.ToString();
             var index = className.LastIndexOf(".", StringComparison.Ordinal);

@@ -111,6 +111,32 @@ namespace Xipton.Razor
                 WriteLiteral(endTag.Item1);
         }
 
+        protected virtual void WriteAttributeTo(TextWriter writer, string attr, Tuple<string, int> startTag, Tuple<string, int> endTag, params object[] args) {
+            var writtenArgCount = 0;
+            foreach (var arg in args) {
+                if (arg == null)
+                    continue;
+
+                var type = arg.GetType().GetGenericArguments()[1].GetGenericArguments()[0];
+
+                var value = _cachedTypes
+                    .GetOrAdd(type, t => typeof(WriteAttributeArg<>).MakeGenericType(type))
+                    .CreateInstance()
+                    .CastTo<IWriteAttributeArg>()
+                    .SetArg(arg).ToString();
+
+                if (value.NullOrEmpty())
+                    continue;
+
+                if (writtenArgCount++ == 0)
+                    WriteLiteralTo(writer,startTag.Item1);
+                WriteTo(writer,value);
+            }
+            if (writtenArgCount > 0)
+                WriteLiteralTo(writer,endTag.Item1);
+        }
+
+
         /// <summary>
         /// Resolves the URL.
         /// </summary>

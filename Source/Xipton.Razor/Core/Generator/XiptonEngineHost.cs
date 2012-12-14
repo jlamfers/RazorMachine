@@ -52,7 +52,7 @@ namespace Xipton.Razor.Core.Generator
             // control like writing the generated output and also handle other control operations like 
             // defining sections inside the template
             _generatedClassContext = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection") {
-                ResolveUrlMethodName = "ResolveUrl"
+                ResolveUrlMethodName = "ResolveUrl",
             };
 
         }
