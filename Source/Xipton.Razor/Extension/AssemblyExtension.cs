@@ -5,6 +5,8 @@
  */
 #endregion
 
+using System;
+using System.IO;
 using System.Reflection;
 
 namespace Xipton.Razor.Extension
@@ -17,5 +19,26 @@ namespace Xipton.Razor.Extension
                 ? null 
                 : assembly.CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
         }
+
+        public static bool IsManagedAssembly(this string self) {
+
+            if (self == null || !File.Exists(self)) {
+                return false;
+            }
+
+            try {
+                AssemblyName.GetAssemblyName(self);
+                return true;
+            }
+            catch (BadImageFormatException) {
+                return false;
+            }
+            catch {
+                return true;
+            }
+
+        }
+
     }
+
 }

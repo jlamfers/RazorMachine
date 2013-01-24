@@ -60,9 +60,15 @@ namespace Xipton.Razor.Extension {
         }
 
         private static void EnsureAssemblyIsLoaded(this AppDomain domain, string assemblyFileName) {
-            var assemblyName = AssemblyName.GetAssemblyName(assemblyFileName);
-            if (!domain.GetAssemblies().Any(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName()))) {
-                domain.Load(assemblyName);
+            try{
+                var assemblyName = AssemblyName.GetAssemblyName(assemblyFileName);
+                if (!domain.GetAssemblies().Any(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName()))){
+                    domain.Load(assemblyName);
+                }
+            }
+            catch (BadImageFormatException){
+                // thrown by GetAssemblyName
+                // ignore this assembly since it is an unmanaged assembly
             }
         }
 

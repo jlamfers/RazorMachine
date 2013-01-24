@@ -50,6 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LiteralStringTest.cs" />
+    <Content Include="unmanaged.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="TemplateTest.cs" />
     <Compile Include="ViewBagTest.cs" />
     <Compile Include="VirtualPathBuilderTest.cs" />
