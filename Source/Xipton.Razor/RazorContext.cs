@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -8,6 +8,7 @@
 using System;
 using Xipton.Razor.Config;
 using Xipton.Razor.Core;
+using Xipton.Razor.Extension;
 
 namespace Xipton.Razor
 {
@@ -21,7 +22,7 @@ namespace Xipton.Razor
         /// </summary>
         public RazorContext(RazorConfig config = null)
         {
-            Config = config ?? new RazorConfig();
+            Config = (config ?? new RazorConfig().Initializer.TryInitializeFromConfig().CastTo<RazorConfig>()).AsReadonly();
             TemplateFactory = new TemplateFactory(this);
         }
 

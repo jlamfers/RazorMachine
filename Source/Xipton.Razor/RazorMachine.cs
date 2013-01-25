@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -29,19 +29,21 @@ namespace Xipton.Razor
 
         #region Constructors
         public RazorMachine(){
-            Context = new RazorContext(new RazorConfig().InitializeDefault());
+            Context = new RazorContext(new RazorConfig().Initializer.TryInitializeFromConfig().AsReadOnly());
         }
-
+        public RazorMachine(RazorConfig config){
+            Context = new RazorContext(config ?? new RazorConfig().Initializer.TryInitializeFromConfig().AsReadOnly());
+        }
         public RazorMachine(string xmlContentOrFileName){
             if (xmlContentOrFileName == null)
                 // default initialization (from app.config or else default settings)
-                Context = new RazorContext(new RazorConfig().InitializeDefault());
+                Context = new RazorContext(new RazorConfig().Initializer.TryInitializeFromConfig().AsReadOnly());
             else if (xmlContentOrFileName.IsFileName())
                 // initialization by xml configuration file
-                Context = new RazorContext(new RazorConfig().InitializeByXmlFileName(xmlContentOrFileName));
+                Context = new RazorContext(new RazorConfig().Initializer.InitializeByXmlFileName(xmlContentOrFileName).AsReadOnly());
             else if (xmlContentOrFileName.IsXmlContent())
                 // initialization by literal xml configuration string
-                Context = new RazorContext(new RazorConfig().InitializeByXmlContent(xmlContentOrFileName));
+                Context = new RazorContext(new RazorConfig().Initializer.InitializeByXmlContent(xmlContentOrFileName).AsReadOnly());
             else
                 throw new ArgumentException("Argument must be either an existing file name or literal xml content", "xmlContentOrFileName");
         }
@@ -51,7 +53,7 @@ namespace Xipton.Razor
             string rootOperatorPath = null,
             RazorCodeLanguage language = null,
             string defaultExtension = null,
-            string autoIncludeName = null,
+            string autoIncludeNameWithoutExtension = null,
             string sharedLocation = null,
             bool? includeGeneratedSourceCode = null,
             bool? htmlEncode = null,
@@ -63,22 +65,27 @@ namespace Xipton.Razor
             bool replaceContentProviders = false
             )
         {
-            Context = new RazorContext(new RazorConfig().InitializeIfSet(
-                baseType, 
-                rootOperatorPath, 
-                language, 
-                defaultExtension, 
-                autoIncludeName, 
-                sharedLocation, 
-                includeGeneratedSourceCode, 
-                htmlEncode, 
-                references, 
-                namespaces, 
-                contentProviders, 
-                replaceReferences, 
-                replaceNamespaces,
-                replaceContentProviders
-                ));
+            Context = new RazorContext(new RazorConfig()
+                .Initializer
+                .TryInitializeFromConfig()
+                .InitializeByValues(
+                    baseType, 
+                    rootOperatorPath, 
+                    language, 
+                    defaultExtension, 
+                    autoIncludeNameWithoutExtension, 
+                    sharedLocation, 
+                    includeGeneratedSourceCode, 
+                    htmlEncode, 
+                    references, 
+                    namespaces, 
+                    contentProviders, 
+                    replaceReferences, 
+                    replaceNamespaces,
+                    replaceContentProviders
+                )
+                .AsReadOnly()
+            );
         }
 
         #endregion
@@ -158,30 +165,42 @@ namespace Xipton.Razor
 
         public RazorContext Context { get; private set; }
 
-        /// <summary>
-        /// Registers an in-memory template bound to a virtual path.
-        /// </summary>
-        /// <param name="virtualPath">The virtual path.</param>
-        /// <param name="content">The content.</param>
-        /// <returns></returns>
         public RazorMachine RegisterTemplate(string virtualPath, string content)
         {
-            if (virtualPath.NullOrEmpty()) throw new ArgumentNullException("virtualPath");
-            virtualPath = new VirtualPathBuilder(Context.Config.RootOperator.Path)
-                .CombineWith(virtualPath)
-                .WithRootOperator()
-                .AddOrKeepExtension(Context.Config.Templates.DefaultExtension);
-            var provider = Context.TemplateFactory.ContentManager.TryGetContentProvider<MemoryContentProvider>();
-            if (provider == null)
-                Context.TemplateFactory.ContentManager.AddContentProvider(provider = new MemoryContentProvider());
-            provider.RegisterTemplate(virtualPath, content);
+            MemoryContentProvider.RegisterTemplate(NormalizeVirtualPath(virtualPath), content);
             return this;
+        }
+        public RazorMachine RemoveTemplate(string virtualPath) {
+            MemoryContentProvider.RegisterTemplate(NormalizeVirtualPath(virtualPath),null);
+            return this;
+        }
+        public IDictionary<string, string> GetRegisteredInMemoryTemplates() {
+            return MemoryContentProvider.GetRegisteredTemplates();
         }
 
         public RazorMachine ClearTypeCache(){
             Context.TemplateFactory.ClearTypeCache();
             return this;
         }
+
+        protected MemoryContentProvider MemoryContentProvider {
+            get {
+                var provider = Context.TemplateFactory.ContentManager.TryGetContentProvider<MemoryContentProvider>();
+                if (provider == null)
+                    Context.TemplateFactory.ContentManager.AddContentProvider(provider = new MemoryContentProvider());
+                return provider;
+            }
+        }
+
+        protected string NormalizeVirtualPath(string virtualPath) {
+            if (virtualPath.NullOrEmpty()) throw new ArgumentNullException("virtualPath");
+            virtualPath = new VirtualPathBuilder(Context.Config.RootOperator.Path)
+                .CombineWith(virtualPath)
+                .WithRootOperator()
+                .AddOrKeepExtension(Context.Config.Templates.DefaultExtension);
+            return virtualPath;
+        }
+
 
         #region Implementation of IDisposable
 

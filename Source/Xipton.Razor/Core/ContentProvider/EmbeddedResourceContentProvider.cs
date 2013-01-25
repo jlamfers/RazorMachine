@@ -3,7 +3,7 @@
 #pragma warning disable 67
 
 #region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -50,7 +50,7 @@ namespace Xipton.Razor.Core.ContentProvider
             if (virtualPath.NullOrEmpty()) return null;
             var resourceName = _rootNameSpace + "." + virtualPath.RemoveRoot().Replace("/",".").Replace("-","_");
             var resources = _resourceAssembly.GetManifestResourceNames().ToList();
-            return resources.Where(r => AreEqualResourceNames(r, resourceName)).FirstOrDefault();
+            return resources.FirstOrDefault(r => AreEqualResourceNames(r, resourceName));
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "The stream can be disposed multiple times.")]

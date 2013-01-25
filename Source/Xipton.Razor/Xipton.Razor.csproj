@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\IRazorConfigInitializer.cs" />
     <Compile Include="Config\TemplatesElement.cs" />
     <Compile Include="Config\RootOperatorElement.cs" />
     <Compile Include="Config\ConfigElement.cs" />

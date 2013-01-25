@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -42,9 +42,7 @@ namespace Xipton.Razor.Core.ContentProvider
             lock(_contentProviders)
             {
                 return _contentProviders
-                    .Select(provider => provider.TryGetResourceName(virtualPath))
-                    .Where(s => s != null)
-                    .FirstOrDefault();
+                    .Select(provider => provider.TryGetResourceName(virtualPath)).FirstOrDefault(s => s != null);
             }
         }
 
@@ -53,9 +51,7 @@ namespace Xipton.Razor.Core.ContentProvider
             lock (_contentProviders)
             {
                 return _contentProviders
-                    .Select(provider => provider.TryGetContent(resourceName))
-                    .Where(s => s != null)
-                    .FirstOrDefault();
+                    .Select(provider => provider.TryGetContent(resourceName)).FirstOrDefault(s => s != null);
             }
         }
 
@@ -119,7 +115,7 @@ namespace Xipton.Razor.Core.ContentProvider
         /// <returns></returns>
         public IContentProvider TryGetContentProvider(Type type) {
             lock (_contentProviders){
-                return _contentProviders.Where(p => p.GetType() == type).SingleOrDefault();
+                return _contentProviders.SingleOrDefault(p => p.GetType() == type);
             }
         }
 

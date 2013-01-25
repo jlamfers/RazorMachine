@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -20,21 +20,25 @@ namespace Xipton.Razor.Extension
                 : assembly.CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
         }
 
+        //http://msdn.microsoft.com/en-us/library/ms173100.aspx
         public static bool IsManagedAssembly(this string self) {
 
             if (self == null || !File.Exists(self)) {
                 return false;
             }
 
-            try {
+            try{
                 AssemblyName.GetAssemblyName(self);
                 return true;
             }
-            catch (BadImageFormatException) {
+            catch (BadImageFormatException){
                 return false;
             }
-            catch {
+            catch (FileLoadException){
                 return true;
+            }
+            catch{
+                return false;
             }
 
         }

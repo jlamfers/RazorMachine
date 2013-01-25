@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -43,7 +43,7 @@ namespace Xipton.Razor.Core.Generator
         {
             if (config == null) throw new ArgumentNullException("config");
             _defaultNamespace = "Xipton.Razor.Generated";
-            _config = config;
+            _config = config.AsReadonly();
             _defaultBaseClass = _config.Templates.NonGenericBaseTypeName;
             _namespaceImports = new HashSet<string>();
             _config.Namespaces.ToList().ForEach(ns => _namespaceImports.Add(ns));

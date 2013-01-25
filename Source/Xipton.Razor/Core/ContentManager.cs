@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -57,6 +57,7 @@ namespace Xipton.Razor.Core
         public ContentManager(RazorConfig config)
         {
             if (config == null) throw new ArgumentNullException("config");
+            config = config.AsReadonly();
             _contentProvider = new CompositeContentProvider();
             ContentProvider.ContentModified += OnContentModified;
             config.ContentProviders.ToList().ForEach(ctor => AddContentProvider(ctor()));

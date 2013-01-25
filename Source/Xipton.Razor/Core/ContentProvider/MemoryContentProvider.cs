@@ -1,11 +1,12 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -45,6 +46,14 @@ namespace Xipton.Razor.Core.ContentProvider
         }
 
         #endregion
+
+        public Dictionary<string, string> GetRegisteredTemplates(){
+            return _content.ToDictionary(item => item.Key, item => item.Value);
+        }
+
+        public MemoryContentProvider RemoveTemplate(string virtualRootRelativePath){
+            return RegisterTemplate(virtualRootRelativePath, null);
+        }
 
         public MemoryContentProvider RegisterTemplate(string virtualRootRelativePath, string content)
         {

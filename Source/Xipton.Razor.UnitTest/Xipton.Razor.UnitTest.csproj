@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigTest.cs" />
     <Compile Include="LiteralStringTest.cs" />
     <Content Include="unmanaged.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

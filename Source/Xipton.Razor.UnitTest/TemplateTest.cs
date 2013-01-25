@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework;
 using Xipton.Razor.Core;
 
@@ -20,6 +21,20 @@ namespace Xipton.Razor.UnitTest
 
     [TestFixture]
     public class TemplateTest {
+
+        [Test]
+        public void TemplateAccessorsWork(){
+            var content = "any content";
+            var rm = new RazorMachine();
+            rm.RegisterTemplate("/yep", content);
+            var template = rm.Execute("/yep");
+            Assert.AreEqual(content,template.Result.Trim());
+            var templates = rm.GetRegisteredInMemoryTemplates();
+            Assert.AreEqual(1,templates.Count);
+            rm.RemoveTemplate("/yep");
+            templates = rm.GetRegisteredInMemoryTemplates();
+            Assert.AreEqual(0, templates.Count);
+        }
 
         [Test]
         public void HelperWorks() {

@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.4
+/* This code is part of Xipton.Razor v2.5
  * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -31,10 +31,18 @@ namespace Xipton.Razor.Config {
     /// these are merged with the already present configured (or default) namespaces and references, unless you specify that these arguments must replace
     /// the corresponding present settings.
     /// </summary>
-    public class RazorConfig {
+    public sealed class RazorConfig : IRazorConfigInitializer
+    {
 
         private const string 
             _rootElementName = "xipton.razor";
+
+        private bool 
+            _isReadOnly;
+
+        public RazorConfig(){
+            LoadDefaults();
+        }
 
         #region Configuration Properties
         public RootOperatorElement RootOperator { get; private set; }
@@ -42,27 +50,35 @@ namespace Xipton.Razor.Config {
         public IList<string> Namespaces { get; private set; }
         public IList<string> References { get; private set; }
         public IList<Func<IContentProvider>> ContentProviders { get; private set; }
+        public IRazorConfigInitializer Initializer{
+            get{
+                EnsureNotReadonly();
+                return this;
+            }
+        }
         #endregion
 
-        #region Initializers
-        internal RazorConfig InitializeIfSet(
-            Type baseType = null,
-            string rootOperatorPath = null,
-            RazorCodeLanguage language = null,
-            string defaultExtension = null,
-            string autoIncludeNameWithoutExtension = null,
-            string sharedLocation = null,
-            bool? includeGeneratedSourceCode = null,
-            bool? htmlEncode = null,
-            IEnumerable<string> references = null,
-            IEnumerable<string> namespaces = null,
-            IEnumerable<Func<IContentProvider>> contentProviders = null,
-            bool replaceReferences = false,
-            bool replaceNamespaces = false,
-            bool replaceContentProviders = false
+        #region IRazorConfigInitializer
+
+        IRazorConfigInitializer IRazorConfigInitializer.InitializeByValues(
+            Type baseType,
+            string rootOperatorPath,
+            RazorCodeLanguage language,
+            string defaultExtension,
+            string autoIncludeNameWithoutExtension,
+            string sharedLocation,
+            bool? includeGeneratedSourceCode,
+            bool? htmlEncode,
+            IEnumerable<string> references,
+            IEnumerable<string> namespaces,
+            IEnumerable<Func<IContentProvider>> contentProviders,
+            bool replaceReferences,
+            bool replaceNamespaces,
+            bool replaceContentProviders
             )
         {
-            InitializeDefault();
+
+            EnsureNotReadonly();
 
             RootOperator.Path = rootOperatorPath ?? RootOperator.Path;
 
@@ -77,7 +93,6 @@ namespace Xipton.Razor.Config {
                 Templates.HtmlEncode = htmlEncode.Value;
             if (references != null) {
                 References = replaceReferences ? references.ToList().AsReadOnly() : References.Union(references, StringComparer.InvariantCultureIgnoreCase).ToList().AsReadOnly();
-                TryResolveWildcardReferences();
             }
             if (namespaces != null) {
                 Namespaces = replaceNamespaces ? namespaces.ToList().AsReadOnly() : Namespaces.Union(namespaces).ToList().AsReadOnly();
@@ -89,15 +104,18 @@ namespace Xipton.Razor.Config {
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StringReader is disposed on XmlTextReader.Dispose()")]
-        internal RazorConfig InitializeByXmlContent(string xmlContent) {
+        IRazorConfigInitializer IRazorConfigInitializer.InitializeByXmlContent(string xmlContent) {
             if (xmlContent == null) throw new ArgumentNullException("xmlContent");
+            EnsureNotReadonly();
             using (var reader = new XmlTextReader(new StringReader(xmlContent))){
                 LoadSettingsFromXDocumentOrElseDefaults(XDocument.Load(reader));
             }
             return this;
         }
-        internal RazorConfig InitializeByXmlFileName(string fileName) {
+
+        IRazorConfigInitializer IRazorConfigInitializer.InitializeByXmlFileName(string fileName) {
             if (fileName == null) throw new ArgumentNullException("fileName");
+            EnsureNotReadonly();
             if (!File.Exists(fileName)){
                 throw new FileNotFoundException("Configuration file '{0}' not found.".FormatWith(fileName), fileName);
             }
@@ -105,18 +123,38 @@ namespace Xipton.Razor.Config {
                 LoadSettingsFromXDocumentOrElseDefaults(XDocument.Load(reader));
             return this;
         }
-        internal RazorConfig InitializeDefault() {
+
+        IRazorConfigInitializer IRazorConfigInitializer.TryInitializeFromConfig() {
+            EnsureNotReadonly();
             var section = ConfigurationManager.GetSection("xipton.razor.config");
             XElement innerXml;
             if (section != null && (innerXml = section.CastTo<XmlConfigurationSection>().InnerXml) != null)
                 LoadSettingsFromXDocumentOrElseDefaults(new XDocument(innerXml));
-            else
-                LoadDefaults();
+            return this;
+        }
+
+        RazorConfig IRazorConfigInitializer.AsReadOnly(){
+            return AsReadonly();
+        }
+
+        #endregion
+
+        #region Internal
+        internal RazorConfig AsReadonly() {
+            if (!_isReadOnly) {
+                _isReadOnly = true;
+                TryResolveWildcardReferences();
+            }
             return this;
         }
         #endregion
 
         #region Private
+        private void EnsureNotReadonly() {
+            if (_isReadOnly)
+                throw new InvalidOperationException("Configuration is read-only, after it has been registered inside the razor context, and cannot be modified anymore.");
+        }
+
         private static IList<string> CreateDefaultNamespaces() {
             return
                 new List<string>
@@ -192,8 +230,6 @@ namespace Xipton.Razor.Config {
                     .ToList()
                     .AsReadOnly();
 
-                TryResolveWildcardReferences();
-
                 var contentProviderElements = 
                     xElements
                     .Descendants("contentProviders")
@@ -225,7 +261,6 @@ namespace Xipton.Razor.Config {
             Namespaces = CreateDefaultNamespaces();
             References = CreateDefaultReferences();
             ContentProviders = CreateDefaultContentProviders();
-            TryResolveWildcardReferences();
         }
         private void TryResolveWildcardReferences() {
 
@@ -279,6 +314,7 @@ namespace Xipton.Razor.Config {
         }
 
         #endregion
+
 
     }
 
