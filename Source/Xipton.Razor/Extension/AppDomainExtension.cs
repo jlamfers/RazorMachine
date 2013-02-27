@@ -56,13 +56,13 @@ namespace Xipton.Razor.Extension {
                 : new AssemblyName(assemblyFileNameOrAssemblyDisplayName);
             return domain
                 .GetAssemblies()
-                .FirstOrDefault(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName())) ?? domain.Load(assemblyName);
+                .FirstOrDefault(a => ReferenceMatchesDefinitionEx(assemblyName, a.GetName())) ?? domain.Load(assemblyName);
         }
 
         private static void EnsureAssemblyIsLoaded(this AppDomain domain, string assemblyFileName) {
             try{
                 var assemblyName = AssemblyName.GetAssemblyName(assemblyFileName);
-                if (!domain.GetAssemblies().Any(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName()))){
+                if (!domain.GetAssemblies().Any(a => ReferenceMatchesDefinitionEx(assemblyName, a.GetName()))){
                     domain.Load(assemblyName);
                 }
             }
@@ -70,6 +70,15 @@ namespace Xipton.Razor.Extension {
                 // thrown by GetAssemblyName
                 // ignore this assembly since it is an unmanaged assembly
             }
+        }
+
+        private static bool ReferenceMatchesDefinitionEx(AssemblyName reference, AssemblyName definition)
+        {
+#if __MonoCS__
+            return string.Equals(reference.ToString(), definition.ToString(), StringComparison.OrdinalIgnoreCase);
+#else
+            return AssemblyName.ReferenceMatchesDefinition(reference, definition);
+#endif
         }
 
 
