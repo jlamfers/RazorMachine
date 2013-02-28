@@ -15,9 +15,26 @@ namespace Xipton.Razor.Extension
     {
         public static string GetFileName(this Assembly assembly)
         {
+
+#if __MonoCS__
             return assembly == null 
-                ? null 
-                : assembly.CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
+                ? null
+                : new DirectoryInfo(IsNotWindows ? assembly.CodeBase.Replace("file:///", "/") : assembly.CodeBase.Replace("file:///", string.Empty)).FullName;
+#else
+            return assembly == null
+                ? null
+                : new DirectoryInfo(assembly.CodeBase.Replace("file:///", string.Empty)).FullName;
+#endif
+
+        }
+
+        public static bool IsNotWindows
+        {
+            get
+            {
+                var p = (int)Environment.OSVersion.Platform;
+                return (p == 4) || (p == 6) || (p == 128);
+            }
         }
 
         //http://msdn.microsoft.com/en-us/library/ms173100.aspx
