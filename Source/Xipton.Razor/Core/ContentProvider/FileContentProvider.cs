@@ -53,7 +53,7 @@ namespace Xipton.Razor.Core.ContentProvider
         public virtual string TryGetResourceName(string virtualPath)
         {
             if (string.IsNullOrEmpty(virtualPath)) return null;
-            var file = new FileInfo(Path.Combine(_rootFolder, virtualPath.RemoveRoot()).Replace("/","\\"));
+            var file = new FileInfo(Path.Combine(_rootFolder, virtualPath.RemoveRoot()).Replace('/', Path.DirectorySeparatorChar));
             if (!file.Exists) return null;
             EnsureWatcherInitialized();
             return file.FullName;
