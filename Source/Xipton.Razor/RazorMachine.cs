@@ -1,6 +1,6 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.5
- * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
+/* This code is part of Xipton.Razor v2.6
+ * (c) Jaap Lamfers, 2013 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
 #endregion
@@ -19,7 +19,7 @@ namespace Xipton.Razor
     /// <summary>
     /// The main razor template executer. Use a singleton instance because each instance creates its own type cache (at the template factory).
     /// </summary>
-    public class RazorMachine : IDisposable
+    public class RazorMachine : IDisposable, IRazorMachine
     {
 
         protected internal const string ContentGeneratedUrlPrefix = "~/_MemoryContent/_{0}";
@@ -113,7 +113,7 @@ namespace Xipton.Razor
             if (instance == null) return null;
 
             var template = instance
-                .CastTo<ITemplateInternal>()
+                .CastTo<ITemplateController>()
                 .SetModel(model)
                 .SetViewBag(viewbag)
                 .Execute();

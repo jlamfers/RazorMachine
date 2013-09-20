@@ -1,6 +1,6 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.5
- * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
+/* This code is part of Xipton.Razor v2.6
+ * (c) Jaap Lamfers, 2013 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
 #endregion
@@ -26,7 +26,7 @@ namespace Xipton.Razor
     /// Next you must create the generic type MyTemplateBase&lt;T> (same name, one type parameter!) that inherits MyTemplateBase and impements ITemplate&lt;T>
     /// </remarks>
     /// </summary>
-    public abstract class TemplateBase : ITemplateInternal
+    public abstract class TemplateBase : ITemplateController
     {
         #region Types
         private interface IWriteAttributeArg{
@@ -227,12 +227,12 @@ namespace Xipton.Razor
         #endregion
 
         #region ITemplateInternal
-        ITemplateInternal ITemplateInternal.SetModel(object model)
+        ITemplateController ITemplateController.SetModel(object model)
         {
             Model = DynamicData.ToDynamic(model);
             return this;
         }
-        ITemplateInternal ITemplateInternal.SetViewBag(object viewBag)
+        ITemplateController ITemplateController.SetViewBag(object viewBag)
         {
             if (viewBag == null || viewBag is IDynamicMetaObjectProvider)
                 _viewBag = viewBag;
@@ -243,13 +243,13 @@ namespace Xipton.Razor
             return this;
         }
 
-        ITemplateInternal ITemplateInternal.AddChild(ITemplateInternal child)
+        ITemplateController ITemplateController.AddChild(ITemplateController child)
         {
             _childs = _childs ?? new List<ITemplate>();
             _childs.Add(child);
             return this;
         }
-        ITemplateInternal ITemplateInternal.ApplyLayout(ITemplateInternal layoutTemplate)
+        ITemplateController ITemplateController.ApplyLayout(ITemplateController layoutTemplate)
         {
             if (layoutTemplate.Parent != null)
                 throw new TemplateException("You cannot apply a layout more than once. The layout in argument 'layoutTemplate' already has been applied before. You must create a new layout instance on each assignment.");
@@ -265,7 +265,7 @@ namespace Xipton.Razor
             _finalResult = layoutTemplate.Result;
             return this;
         }
-        ITemplateInternal ITemplateInternal.TryApplyLayout()
+        ITemplateController ITemplateController.TryApplyLayout()
         {
             if (Layout.NullOrEmpty())
                 return this;
@@ -275,24 +275,24 @@ namespace Xipton.Razor
             var layoutTemplate = RazorContext
                 .TemplateFactory
                 .CreateTemplateInstance(layoutPath)
-                .CastTo<ITemplateInternal>();
+                .CastTo<ITemplateController>();
 
-            this.CastTo<ITemplateInternal>().ApplyLayout(layoutTemplate);
+            this.CastTo<ITemplateController>().ApplyLayout(layoutTemplate);
 
             return this;
         }
-        ITemplateInternal ITemplateInternal.SetVirtualPath(string virtualPath)
+        ITemplateController ITemplateController.SetVirtualPath(string virtualPath)
         {
             VirtualPath = virtualPath;
             return this;
         }
 
-        ITemplateInternal ITemplateInternal.SetGeneratedSourceCode(string generatedSourceCode){
+        ITemplateController ITemplateController.SetGeneratedSourceCode(string generatedSourceCode){
             GeneratedSourceCode = generatedSourceCode;
             return this;
         }
 
-        ITemplateInternal ITemplateInternal.SetParent(ITemplateInternal parent)
+        ITemplateController ITemplateController.SetParent(ITemplateController parent)
         {
             Parent = parent;
             if (parent != null){
@@ -307,13 +307,13 @@ namespace Xipton.Razor
             }
             return this;
         }
-        string ITemplateInternal.RenderSectionByChildRequest(string sectionName)
+        string ITemplateController.RenderSectionByChildRequest(string sectionName)
         {
-            ITemplateInternal @this = this;
+            ITemplateController @this = this;
 
             Action renderAction;
             if (!_sections.TryGetValue(sectionName, out renderAction))
-                return @this.Parent == null ? string.Empty : @this.Parent.CastTo<ITemplateInternal>().RenderSectionByChildRequest(sectionName);
+                return @this.Parent == null ? string.Empty : @this.Parent.CastTo<ITemplateController>().RenderSectionByChildRequest(sectionName);
 
             var previous = _outputTarget;
             var output = _outputTarget = new StringBuilder();
@@ -321,13 +321,13 @@ namespace Xipton.Razor
             _outputTarget = previous;
             return output.ToString();
         }
-        ITemplateInternal ITemplateInternal.SetContext(RazorContext context)
+        ITemplateController ITemplateController.SetContext(RazorContext context)
         {
             RazorContext = context;
             OnContextSet();
             return this;
         }
-        ITemplateInternal ITemplateInternal.Execute()
+        ITemplateController ITemplateController.Execute()
         {
             try{
                 Execute();
@@ -380,7 +380,7 @@ namespace Xipton.Razor
         {
             get
             {
-                ITemplateInternal @this = this;
+                ITemplateController @this = this;
                 return _model ?? (@this.Parent != null ? @this.Parent.Model : null);
             }
             private set { _model = value; }
@@ -395,7 +395,7 @@ namespace Xipton.Razor
         {
             get
             {
-                ITemplateInternal @this = this;
+                ITemplateController @this = this;
                 var viewBag = _viewBag ?? (@this.Parent != null ? @this.Parent.ViewBag : null);
                 return viewBag ?? (_viewBag = new DynamicData());
             }
@@ -407,7 +407,7 @@ namespace Xipton.Razor
         /// <returns></returns>
         public virtual LiteralString RenderBody()
         {
-            ITemplateInternal @this = this;
+            ITemplateController @this = this;
             if (@this.Parent == null)
             {
                 throw new TemplateException("Can only invoke RenderBody() at a child (layout) template.");
@@ -423,7 +423,7 @@ namespace Xipton.Razor
         /// <returns></returns>
         public virtual LiteralString RenderSection(string sectionName, bool required = true)
         {
-            ITemplateInternal @this = this;
+            ITemplateController @this = this;
             if (@this.Parent == null)
             {
                 throw new TemplateException("Can only invoke RenderSection() at child templates (layouts).");
@@ -434,7 +434,7 @@ namespace Xipton.Razor
                     throw new TemplateException("Required section '{0}' not found at any parent template of layout '{1}'. If you want to render this section conditionally invoke RederSection with argument required=false".FormatWith(sectionName,@this.VirtualPath));
                 return string.Empty;
             }
-            return new LiteralString(@this.Parent.CastTo<ITemplateInternal>().RenderSectionByChildRequest(sectionName));
+            return new LiteralString(@this.Parent.CastTo<ITemplateController>().RenderSectionByChildRequest(sectionName));
         }
 
         /// <summary>
@@ -446,8 +446,8 @@ namespace Xipton.Razor
         /// <returns></returns>
         public virtual LiteralString RenderPage(string virtualPath, object model = null, bool skipLayout=false)
         {
-            ITemplateInternal @this = this;
-            var page = @this.RazorContext.TemplateFactory.CreateTemplateInstance(VirtualLocation.CombineWith(virtualPath)).CastTo<ITemplateInternal>();
+            ITemplateController @this = this;
+            var page = @this.RazorContext.TemplateFactory.CreateTemplateInstance(VirtualLocation.CombineWith(virtualPath)).CastTo<ITemplateController>();
             page.SetModel(model ?? Model);
             page.SetParent(@this);
             page.Execute();
@@ -465,7 +465,7 @@ namespace Xipton.Razor
         /// </returns>
         public virtual bool IsSectionDefined(string sectionName)
         {
-            ITemplateInternal @this = this;
+            ITemplateController @this = this;
             return _sections.ContainsKey(sectionName) || (@this.Parent != null && @this.Parent.CastTo<ITemplate>().IsSectionDefined(sectionName));
         }
 
@@ -573,7 +573,7 @@ namespace Xipton.Razor
             if (Model == null)
             {
                 try{
-                    ((ITemplateInternal) RootOrSelf).SetModel(typeof (TModel).CreateInstance());
+                    ((ITemplateController) RootOrSelf).SetModel(typeof (TModel).CreateInstance());
                 }
                 catch(Exception ex){
                     throw new TemplateException("Unable to automatically create a new instance for Model type {0}. Type {0} probably does not have a default constructor. You need to pass a model instance on template execution.".FormatWith(typeof(TModel)),ex);

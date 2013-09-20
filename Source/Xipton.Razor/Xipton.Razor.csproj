@@ -73,7 +73,7 @@
     <Compile Include="Core\Generator\IXiptonCodeLanguage.cs" />
     <Compile Include="Core\ContentProvider\FileContentProvider.cs" />
     <Compile Include="Core\DynamicData.cs" />
-    <Compile Include="Core\ITemplateInternal.cs" />
+    <Compile Include="Core\ITemplateController.cs" />
     <Compile Include="Core\ContentManager.cs" />
     <Compile Include="Core\IContentProvider.cs" />
     <Compile Include="Core\VirtualPathBuilder.cs" />
@@ -81,6 +81,7 @@
     <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="Extension\TypeExtension.cs" />
     <Compile Include="ILiteralString.cs" />
+    <Compile Include="IRazorMachine.cs" />
     <Compile Include="ITemplate`1.cs" />
     <Compile Include="LiteralString.cs" />
     <Compile Include="TemplateBase`1.cs" />

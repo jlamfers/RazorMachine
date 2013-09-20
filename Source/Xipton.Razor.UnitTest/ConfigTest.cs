@@ -17,6 +17,18 @@ namespace Xipton.Razor.UnitTest {
             Assert.IsNotNull(config.References);
             Assert.IsNotNull(config.RootOperator);
             Assert.IsNotNull(config.Templates);
+            Assert.IsTrue(config.References.Any(r => r.Contains("*")));
+        }
+        [Test]
+        public void ConfigCanBeCreatedWithoutWildcards()
+        {
+            var config = new RazorConfig(false);
+            Assert.IsNotNull(config.ContentProviders);
+            Assert.IsNotNull(config.Namespaces);
+            Assert.IsNotNull(config.References);
+            Assert.IsNotNull(config.RootOperator);
+            Assert.IsNotNull(config.Templates);
+            Assert.IsFalse(config.References.Any(r => r.Contains("*")));
         }
 
         [Test]

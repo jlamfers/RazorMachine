@@ -1,6 +1,6 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.5
- * (c) Jaap Lamfers, 2012 - jaap.lamfers@xipton.net
+/* This code is part of Xipton.Razor v2.6
+ * (c) Jaap Lamfers, 2013 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
 #endregion
@@ -33,6 +33,8 @@ namespace Xipton.Razor.Config {
     /// </summary>
     public sealed class RazorConfig : IRazorConfigInitializer
     {
+        private readonly bool 
+            _allowWildcardReferences;
 
         private const string 
             _rootElementName = "xipton.razor";
@@ -40,7 +42,9 @@ namespace Xipton.Razor.Config {
         private bool 
             _isReadOnly;
 
-        public RazorConfig(){
+        public RazorConfig(bool allowWildcardReferences = true)
+        {
+            _allowWildcardReferences = allowWildcardReferences;
             LoadDefaults();
         }
 
@@ -168,18 +172,25 @@ namespace Xipton.Razor.Config {
                         "Xipton.Razor.Extension"
                     }.AsReadOnly();
         }
-        private static IList<string> CreateDefaultReferences() {
-            return
+        private IList<string> CreateDefaultReferences() {
+            var references =
                 new List<string>
                     {
                         "mscorlib.dll", 
                         "system.dll", 
                         "system.core.dll", 
-                        "microsoft.csharp.dll", 
-                        "*.dll", 
-                        "*.exe"
-                    }
-                    .AsReadOnly();
+                        "microsoft.csharp.dll"
+                        
+                    };
+            if (_allowWildcardReferences)
+            {
+                references.AddRange(new[]
+                {
+                    "*.dll",
+                    "*.exe"
+                });
+            }
+            return references.AsReadOnly();
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "created instances are disposed on CompositeContentProvider.Dispose()")]
         private static IList<Func<IContentProvider>> CreateDefaultContentProviders() {
@@ -262,16 +273,26 @@ namespace Xipton.Razor.Config {
             References = CreateDefaultReferences();
             ContentProviders = CreateDefaultContentProviders();
         }
-        private void TryResolveWildcardReferences() {
+        private void TryResolveWildcardReferences()
+        {
+
+            // ensure xipton assemblies to be loaded in the execution context
+            AppDomain.CurrentDomain
+                .EnsureXiptonAssembliesLoaded();
 
             if (!References.Any(s => s.Contains("*.")))
+            {
                 // no need to resolve references
                 return;
+            }
 
-            // ensure xipton assemblies as well as all bin assemblies to be loaded in the execution context
-            AppDomain.CurrentDomain
-                .EnsureXiptonAssembliesLoaded()
-                .EnsureBinAssembliesLoaded();
+            if (!_allowWildcardReferences)
+            {
+                throw new TemplateConfigurationException("AllowWildcardReferences == false -> References cannot be configured using wildcards. All references must be configured explicitely.");
+            }
+
+            // ensure all bin assemblies to be loaded in the execution context
+            AppDomain.CurrentDomain.EnsureBinAssembliesLoaded();
 
             var domainAssemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
