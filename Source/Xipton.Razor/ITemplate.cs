@@ -39,7 +39,7 @@ namespace Xipton.Razor
 
         // If generated source code must be included (needs to be configured)
         // then that source code can be accessed by this property
-        // for debug purposes
+        // for debug purposes.
         string GeneratedSourceCode { get; }
 
         // If this template is rendered by another template 
