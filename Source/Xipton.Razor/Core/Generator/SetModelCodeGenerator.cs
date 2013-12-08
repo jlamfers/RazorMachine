@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.6
+/* This code is part of Xipton.Razor v3.0
  * (c) Jaap Lamfers, 2013 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -30,7 +30,7 @@ namespace Xipton.Razor.Core.Generator
 
             #region Work Around
             if (!(context.Host.CodeLanguage is VBRazorCodeLanguage)) 
-                context.GeneratedClass.LinePragma = context.GenerateLinePragma(target, CalculatePadding(target, 0));
+                context.GeneratedClass.LinePragma = context.GenerateLinePragma(target);
             //else
                 // exclude VBRazorCodeLanguage
                 // with VB I found a problem with the #End ExternalSource directive rendered at the GeneratedClass's end while it should not be rendered
