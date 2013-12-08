@@ -30,7 +30,7 @@ namespace Xipton.Razor.Core.Generator
 
             #region Work Around
             if (!(context.Host.CodeLanguage is VBRazorCodeLanguage)) 
-                context.GeneratedClass.LinePragma = context.GenerateLinePragma(target, CalculatePadding(target, 0));
+                context.GeneratedClass.LinePragma = context.GenerateLinePragma(target, CalculateSpanPadding(target, 0));
             //else
                 // exclude VBRazorCodeLanguage
                 // with VB I found a problem with the #End ExternalSource directive rendered at the GeneratedClass's end while it should not be rendered
@@ -63,6 +63,14 @@ namespace Xipton.Razor.Core.Generator
         public override int GetHashCode()
         {
             return ModelType.GetHashCode();
+        }
+
+        private int CalculateSpanPadding(Span target, int generatedStart)
+        {
+            int num = target.Start.CharacterIndex - generatedStart;
+            if (num < 0)
+                num = 0;
+            return num;
         }
     }
 }
