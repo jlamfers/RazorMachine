@@ -79,6 +79,7 @@
     <Compile Include="Core\VirtualPathBuilder.cs" />
     <Compile Include="Extension\AssemblyExtension.cs" />
     <Compile Include="Extension\StringExtension.cs" />
+    <Compile Include="Extension\TemplateExtension.cs" />
     <Compile Include="Extension\TypeExtension.cs" />
     <Compile Include="ILiteralString.cs" />
     <Compile Include="IRazorMachine.cs" />

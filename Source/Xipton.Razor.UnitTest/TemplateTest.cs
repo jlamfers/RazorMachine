@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using Xipton.Razor.Core;
+using Xipton.Razor.Extension;
 
 namespace Xipton.Razor.UnitTest
 {
@@ -19,8 +20,18 @@ namespace Xipton.Razor.UnitTest
         public string LastName { get; set; }
     }
 
+    
+
     [TestFixture]
     public class TemplateTest {
+
+        [Test]
+        public void TemplateCanBePreCompiled()
+        {
+            var rm = new RazorMachine();
+            rm.RegisterTemplate("/yep", "any content");
+            rm.EnsureViewCompiled("/yep");
+        }
 
         [Test]
         public void TemplateAccessorsWork(){
