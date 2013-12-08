@@ -29,14 +29,23 @@ namespace Xipton.Razor.Core.Generator
             context.GeneratedClass.BaseTypes.Add(new CodeTypeReference(ResolveType(context)));
 
             #region Work Around
-            if (!(context.Host.CodeLanguage is VBRazorCodeLanguage)) 
-                context.GeneratedClass.LinePragma = context.GenerateLinePragma(target);
+            if (!(context.Host.CodeLanguage is VBRazorCodeLanguage))
+                context.GeneratedClass.LinePragma = context.GenerateLinePragma(target, CalculateSpanPadding(target,0));
             //else
                 // exclude VBRazorCodeLanguage
                 // with VB I found a problem with the #End ExternalSource directive rendered at the GeneratedClass's end while it should not be rendered
                 // this only effects the compile error report
 
             #endregion
+        }
+
+        //thanks to Marko Lahma
+        private int CalculateSpanPadding(Span target, int generatedStart)
+        {
+            int num = target.Start.CharacterIndex - generatedStart;
+            if (num < 0)
+                num = 0;
+            return num;
         }
 
         protected virtual string ResolveType(CodeGeneratorContext context)
