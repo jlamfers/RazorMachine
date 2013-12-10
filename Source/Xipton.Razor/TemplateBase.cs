@@ -105,7 +105,7 @@ namespace Xipton.Razor
 
                 if (writtenArgCount++ == 0)
                     WriteLiteral(startTag.Item1);
-                Write(value);
+                WriteLiteral(value);
             }
             if (writtenArgCount > 0)
                 WriteLiteral(endTag.Item1);
@@ -130,7 +130,7 @@ namespace Xipton.Razor
 
                 if (writtenArgCount++ == 0)
                     WriteLiteralTo(writer,startTag.Item1);
-                WriteTo(writer,value);
+                WriteLiteralTo(writer,value);
             }
             if (writtenArgCount > 0)
                 WriteLiteralTo(writer,endTag.Item1);
