@@ -26,6 +26,26 @@ namespace Xipton.Razor.UnitTest
     public class TemplateTest {
 
         [Test]
+        public void AttributeValuesAreBeingWrittenRaw()
+        {
+            var rm = new RazorMachine();
+            rm.RegisterTemplate("/raw", @"
+@{
+   var href = ""/someurl?par=10&par2=11"";
+}
+<html>
+<a href=""/someurl?par=10&par2=11"">href</a>
+must be equal to:
+<a href=""@href"">href</a>
+</html>
+");
+            var t = rm.Execute("/raw");
+            Assert.IsFalse(t.Result.Contains("&amp;"));
+            Debug.WriteLine(t);
+        }
+
+
+        [Test]
         public void TemplateCanBePreCompiled()
         {
             var rm = new RazorMachine();
