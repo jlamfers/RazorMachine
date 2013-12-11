@@ -26,21 +26,6 @@ namespace Xipton.Razor.UnitTest
     public class TemplateTest {
 
         [Test]
-        public void RelativePathNameIsResolved()
-        {
-            var rm = new RazorMachine();
-            rm.RegisterTemplate("/views/main/index", @"@RenderPage(""aaa/bbb"")");
-            rm.RegisterTemplate("/views/main/aaa/bbb", "this is: /views/main/aaa/bbb");
-            rm.RegisterTemplate("/views/shared/bbb", "this is /views/shared/bbb");
-            rm.RegisterTemplate("/views/shared/aaa/bbb", "this is /views/shared/aaa/bbb");
-            rm.RegisterTemplate("/shared/bbb", "this is /shared/bbb");
-            rm.RegisterTemplate("/shared/aaa/bbb", "this is /shared/aaa/bbb");
-            var t = rm.Execute("/views/main/index");
-            Debug.WriteLine(rm.Execute("/views/main/index"));
-            Assert.IsTrue(t.Result.EndsWith("/views/main/aaa/bbb"));
-        }
-
-        [Test]
         public void AttributeValuesAreBeingWrittenRaw()
         {
             var rm = new RazorMachine();
