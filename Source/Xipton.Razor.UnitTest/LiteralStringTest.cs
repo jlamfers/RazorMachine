@@ -1,19 +1,19 @@
 ﻿// ReSharper disable HeuristicUnreachableCode
 using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Xipton.Razor.UnitTest {
-    [TestFixture]
+    [TestClass]
     public class LiteralStringTest {
 
-        [Test]
+        [TestMethod]
         public void LiteralStringCanBeInstantiated() {
             new LiteralString(null);
             new LiteralString(string.Empty);
             new LiteralString("foo");
         }
 
-        [Test]
+        [TestMethod]
         public void LiteralStringCanBeComparedToSystemString() {
             Assert.IsTrue(new LiteralString(null).Equals(null));
             new LiteralString(string.Empty).Equals(string.Empty);
@@ -27,7 +27,7 @@ namespace Xipton.Razor.UnitTest {
             Assert.IsFalse(new LiteralString("foo") != "foo");
         }
 
-        [Test]
+        [TestMethod]
         public void LiteralStringCanBeAssignedFromSystemString() {
             LiteralString literalString = "foo";
             Assert.AreEqual(literalString,"foo");
@@ -40,7 +40,7 @@ namespace Xipton.Razor.UnitTest {
             Assert.IsTrue(literalString == null);//! => literalString object itself is not null
         }
 
-        [Test]
+        [TestMethod]
         public void StringCanBeAssignedFromLiteralString() {
             LiteralString literalString = "foo";
             string s = literalString;
@@ -53,7 +53,7 @@ namespace Xipton.Razor.UnitTest {
             Assert.IsTrue(s == null);
         }
 
-        [Test]
+        [TestMethod]
         public void NullStringBehaviorCheck(){
             Assert.IsTrue(new LiteralString(null) == null); // !!
             Assert.IsTrue(new LiteralString(null).ToString() == string.Empty); // !! => ToString() never returns null;

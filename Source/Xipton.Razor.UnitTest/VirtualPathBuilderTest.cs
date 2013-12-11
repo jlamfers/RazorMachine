@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xipton.Razor.Core;
 using Xipton.Razor.Extension;
 
 namespace Xipton.Razor.UnitTest
 {
-    [TestFixture]
+    [TestClass]
     public class VirtualPathBuilderTest {
 
         #region Helper methods
@@ -82,7 +82,7 @@ namespace Xipton.Razor.UnitTest
         #endregion
 
 
-        [Test]
+        [TestMethod]
         public void MonkeyTest()
         {
             MonkeyTest("/");
@@ -108,7 +108,7 @@ namespace Xipton.Razor.UnitTest
             AssertIsValidRoot(NormalizeWorks("/Foo", "/Foo", "/Foo", "~/", "/foo/"));
 
         }
-        [Test]
+        [TestMethod]
         public void ClearWorks() {
             var pb = new VirtualPathBuilder("/Foo");
             Assert.AreEqual(string.Empty, pb.ToString());
@@ -121,7 +121,7 @@ namespace Xipton.Razor.UnitTest
             pb.CombineWith(".");
             Assert.AreEqual("", pb.Normalize().ToString());
         }
-        [Test]
+        [TestMethod]
         public void HasRootOperatorWorks(){
             var pb = new VirtualPathBuilder().CombineWith("~/");
             Assert.IsTrue(pb.HasRootOperator());
@@ -141,7 +141,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb == "/Foo");
             Assert.IsTrue(pb.WithRootOperator().HasRootOperator());
         }
-        [Test]
+        [TestMethod]
         public void IsAbsolutePathWorks() {
             var pb = new VirtualPathBuilder().CombineWith("~/");
             Assert.IsFalse(pb.IsAbsolutePath());
@@ -172,7 +172,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb.IsAbsolutePath());
             Assert.IsFalse(pb.IsValidAbsolutePath());
         }
-        [Test]
+        [TestMethod]
         public void IsApplicationRootWorks(){
             var pb = new VirtualPathBuilder();
             Assert.IsFalse(pb.IsApplicationRoot());
@@ -187,7 +187,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb.Clear().CombineWith("~").Normalize().IsApplicationRoot());
             Assert.IsTrue(pb.Clear().CombineWith("~/").Normalize().IsApplicationRoot());
         }
-        [Test]
+        [TestMethod]
         public void IsValidAbsolutePathWorks() {
             var pb = new VirtualPathBuilder();
             Assert.IsFalse(pb.IsApplicationRoot());
@@ -206,7 +206,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb.Clear().CombineWith("~").Normalize().IsValidAbsolutePath());
             Assert.IsTrue(pb.Clear().CombineWith("~/Anything").Normalize().IsValidAbsolutePath());
         }
-        [Test]
+        [TestMethod]
         public void IsRelativePathWorks() {
             var pb = new VirtualPathBuilder();
             Assert.IsFalse(pb.IsRelativePath());
@@ -218,7 +218,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsFalse(pb.IsRelativePath());
             Assert.IsTrue(pb.IsAbsolutePath());
         }
-        [Test]
+        [TestMethod]
         public void ResolveRootOperatorWorks() {
             var pb = new VirtualPathBuilder();
             Assert.IsTrue(pb.CombineWith("Foo").ResolveRootOperator().ToString() == "/Foo");
@@ -235,7 +235,7 @@ namespace Xipton.Razor.UnitTest
             }
             Assert.IsTrue(caught);
         }
-        [Test]
+        [TestMethod]
         public void WithRootOperatorWorks() {
             var pb = new VirtualPathBuilder("/Foo");
             var caught = false;
@@ -249,7 +249,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb.CombineWith("/Foo").WithRootOperator() == "~/");
             Assert.IsTrue(pb.Clear().CombineWith("Doo").WithRootOperator() == "~/Doo");
         }
-        [Test]
+        [TestMethod]
         public void NormalizeWorks(){
             var pb = new VirtualPathBuilder().Normalize();
             Assert.IsTrue(pb == "");
@@ -271,7 +271,7 @@ namespace Xipton.Razor.UnitTest
             CombineWithWorks();
 
         }
-        [Test]
+        [TestMethod]
         public void CombineWithWorks(){
             var pb = new VirtualPathBuilder("/foo").CombineWith("oops/../doo/.").Normalize();
             Assert.IsTrue(pb == "/foo/doo");
@@ -281,7 +281,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb == "/foo");
             Assert.IsTrue(pb == "~/");
         }
-        [Test]
+        [TestMethod]
         public void HasExtensionWorks() {
             var pb = new VirtualPathBuilder().CombineWith(".");
             Assert.IsTrue(pb == ".");
@@ -291,7 +291,7 @@ namespace Xipton.Razor.UnitTest
             pb.Normalize();
             Assert.IsTrue(pb.HasExtension());
         }
-        [Test]
+        [TestMethod]
         public void GetExtensionWorks() {
             var pb = new VirtualPathBuilder().CombineWith(".");
             Assert.IsTrue(pb == ".");
@@ -306,7 +306,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb.GetExtension(true) == "cshtml");
             Assert.IsFalse(pb.HasExtension());
         }
-        [Test]
+        [TestMethod]
         public void AddOrReplaceExtensionWorks() {
             var pb = new VirtualPathBuilder().CombineWith("~/t.cs");
             Assert.IsTrue(pb.GetExtension() == "cs");
@@ -317,7 +317,7 @@ namespace Xipton.Razor.UnitTest
             pb.AddOrReplaceExtension("vb");
             Assert.IsTrue(pb.GetExtension() == "vb");
         }
-        [Test]
+        [TestMethod]
         public void AddOrKeepExtensionWorks() {
             var pb = new VirtualPathBuilder().CombineWith("~/t.cs");
             Assert.IsTrue(pb.GetExtension() == "cs");
@@ -328,7 +328,7 @@ namespace Xipton.Razor.UnitTest
             pb.AddOrKeepExtension("vb");
             Assert.IsTrue(pb.GetExtension() == "vb");
         }
-        [Test]
+        [TestMethod]
         public void RemoveExtensionWorks() {
             var pb = new VirtualPathBuilder();
             pb.RemoveExtension();
@@ -337,7 +337,7 @@ namespace Xipton.Razor.UnitTest
             pb.RemoveExtension();
             Assert.IsNull(pb.GetExtension());
         }
-        [Test]
+        [TestMethod]
         public void GetFirstPartWorks() {
             var pb = new VirtualPathBuilder("/foo").CombineWith("~/app/path/");
             Assert.IsTrue(pb.GetFirstPart() == "~");
@@ -357,7 +357,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb.GetFirstPart(true) == "/path");
             Assert.IsTrue(pb.GetFirstPart(true) == "");
         }
-        [Test]
+        [TestMethod]
         public void GetLastPartWorks() {
             var pb = new VirtualPathBuilder("/foo").CombineWith("~/app/path/");
             Assert.IsTrue(pb.GetLastPart() == "path");
@@ -377,7 +377,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb.GetLastPart(true) == "foo");
             Assert.IsTrue(pb.GetLastPart(true) == "/");
         }
-        [Test]
+        [TestMethod]
         public void HasTrailingSlashWorks(){
             var pb = new VirtualPathBuilder().CombineWith("/").Normalize();
             Assert.IsTrue(pb.HasTrailingSlash());
@@ -388,7 +388,7 @@ namespace Xipton.Razor.UnitTest
             Assert.IsFalse(pb.HasTrailingSlash());
 
         }
-        [Test]
+        [TestMethod]
         public void AppendTrailingSlashWorks() {
             var pb = new VirtualPathBuilder().CombineWith("/").AppendTrailingSlash();
             Assert.IsTrue(pb == "/");
@@ -396,14 +396,14 @@ namespace Xipton.Razor.UnitTest
             Assert.IsTrue(pb.HasTrailingSlash());
             Assert.IsTrue(pb == "/foo/");
         }
-        [Test]
+        [TestMethod]
         public void RemoveTrailingSlashWorks() {
             var pb = new VirtualPathBuilder().CombineWith("/").RemoveTrailingSlash();
             Assert.IsTrue(pb == "");
             pb.Clear().CombineWith("/").RemoveTrailingSlash(true);
             Assert.IsTrue(pb == "/");
         }
-        [Test]
+        [TestMethod]
         public void PathBuilderWorksWithRootPartAdded()
         {
             var pb = new VirtualPathBuilder();
@@ -411,7 +411,7 @@ namespace Xipton.Razor.UnitTest
             pb.CombineWith("/");
             Assert.AreEqual("/", pb.ToString());
         }
-        [Test]
+        [TestMethod]
         public void NormalizingToRootRelativeWorksForCurrentDirectory()
         {
             var pb = new VirtualPathBuilder();
@@ -422,7 +422,7 @@ namespace Xipton.Razor.UnitTest
                 .WithRootOperator();
             Assert.AreEqual("~/", pb.ToString());
         }
-        [Test]
+        [TestMethod]
         public void NormalizingToRootRelativeWorksForBackDirectory()
         {
             var pb = new VirtualPathBuilder();
@@ -432,7 +432,7 @@ namespace Xipton.Razor.UnitTest
                 .WithRootOperator();
             Assert.AreEqual("~/", pb.ToString());
         }
-        [Test]
+        [TestMethod]
         public void PathBuilderCanBeCreatedFromTwoParts()
         {
             var pb = new VirtualPathBuilder();

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xipton.Razor.Config;
 
 namespace Xipton.Razor.UnitTest {
-    [TestFixture]
+    [TestClass]
     public class ConfigTest {
 
-        [Test]
+        [TestMethod]
         public void ConfigCanBeCreated(){
             var config = new RazorConfig();
             Assert.IsNotNull(config.ContentProviders);
@@ -19,7 +19,7 @@ namespace Xipton.Razor.UnitTest {
             Assert.IsNotNull(config.Templates);
             Assert.IsTrue(config.References.Any(r => r.Contains("*")));
         }
-        [Test]
+        [TestMethod]
         public void ConfigCanBeCreatedWithoutWildcards()
         {
             var config = new RazorConfig(false);
@@ -31,7 +31,7 @@ namespace Xipton.Razor.UnitTest {
             Assert.IsFalse(config.References.Any(r => r.Contains("*")));
         }
 
-        [Test]
+        [TestMethod]
         public void ConfigIsLoadedFromConfig() {
             var config = new RazorConfig();
             Assert.IsFalse(config.Templates.IncludeGeneratedSourceCode);
@@ -39,7 +39,7 @@ namespace Xipton.Razor.UnitTest {
             Assert.IsTrue(config.Templates.IncludeGeneratedSourceCode);
         }
 
-        [Test]
+        [TestMethod]
         public void ConfigIsLoadedFromFile() {
             var config = new RazorConfig();
             Assert.IsFalse(config.Templates.IncludeGeneratedSourceCode);
@@ -47,14 +47,14 @@ namespace Xipton.Razor.UnitTest {
             Assert.IsTrue(config.Templates.IncludeGeneratedSourceCode);
         }
 
-        [Test]
+        [TestMethod]
         public void ConfigIsLoadedFromValues() {
             var config = new RazorConfig();
             config.Initializer.InitializeByValues(defaultExtension: ".vb");
             Assert.AreEqual(config.Templates.DefaultExtension,".vb");
         }
 
-        [Test]
+        [TestMethod]
         public void ConfigIsLoadedFromXml() {
             var config = new RazorConfig();
             config.Initializer.InitializeByXmlContent(
@@ -67,7 +67,7 @@ namespace Xipton.Razor.UnitTest {
             Assert.AreEqual(config.RootOperator.Path, "/foo");
         }
 
-        [Test]
+        [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ConfigCannotBeModifiedAfterRazorMachineInitialization(){
 

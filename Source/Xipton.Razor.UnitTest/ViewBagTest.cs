@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xipton.Razor.Core;
 using Xipton.Razor.Extension;
 
 namespace Xipton.Razor.UnitTest
 {
-    [TestFixture]
+    [TestClass]
     public class ViewBagTest
     {
 
@@ -19,7 +19,7 @@ namespace Xipton.Razor.UnitTest
   />
   <namespaces>
     <add namespace=""System.Diagnostics""/>
-    <add namespace=""NUnit.Framework""/>
+    <add namespace=""Microsoft.VisualStudio.TestTools.UnitTesting""/>
   </namespaces>
 
 </xipton.razor>
@@ -28,7 +28,7 @@ namespace Xipton.Razor.UnitTest
             return new RazorMachine(setup);
         }
 
-        [Test]
+        [TestMethod]
         public void ViewBagValueIsSet()
         {
             var engine = new RazorMachine()
@@ -38,7 +38,7 @@ namespace Xipton.Razor.UnitTest
             Assert.AreEqual(1, template.ViewBag.Foo);
         }
 
-        [Test]
+        [TestMethod]
         public void EmptyViewBagCanBeAssignedTo()
         {
             var engine = NewEngine("/foo");
@@ -47,7 +47,7 @@ namespace Xipton.Razor.UnitTest
             Assert.AreEqual(1,template.ViewBag.Foo);
         }
 
-        [Test]
+        [TestMethod]
         [ExpectedException(typeof(TemplateBindingException))]
         public void EmptyViewBagThrowsRuntimeBinderExceptionOnInvalidReference()
         {
@@ -56,14 +56,14 @@ namespace Xipton.Razor.UnitTest
             engine.ExecuteUrl("/Test");
         }
 
-        [Test]
+        [TestMethod]
         public void ViewBagCanBe_AnonymousInstance()
         {
             var engine = NewEngine();
             engine.RegisterTemplate("~/Test/Foo", "@{var i = (int)ViewBag.Foo;Assert.AreEqual(10,i);}");
             engine.ExecuteUrl("/Test/Foo",viewbag:new{Foo = 10});
         }
-        [Test]
+        [TestMethod]
         public void ViewBagCanBe_KeyValueDictionary()
         {
             var engine = NewEngine();
@@ -77,7 +77,7 @@ namespace Xipton.Razor.UnitTest
             public int Foo { get { return 10; } }
 // ReSharper restore UnusedMember.Local
         }
-        [Test]
+        [TestMethod]
         public void ViewBagCanBe_Class()
         {
             var engine = NewEngine();
@@ -85,7 +85,7 @@ namespace Xipton.Razor.UnitTest
             engine.ExecuteUrl("~/Test", viewbag: new FooHolder());
 
         }
-        [Test]
+        [TestMethod]
         public void ViewBagFromParentIsReferencedImplicitly()
         {
             var engine = NewEngine();
@@ -95,7 +95,7 @@ namespace Xipton.Razor.UnitTest
 
         }
 
-        [Test]
+        [TestMethod]
         public void ViewBagAtChildInstantiatesRootViewBagIfChildHasNoViewBag()
         {
             var engine = NewEngine();

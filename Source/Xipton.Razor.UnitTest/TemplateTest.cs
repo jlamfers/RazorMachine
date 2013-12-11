@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xipton.Razor.Core;
 using Xipton.Razor.Extension;
 
@@ -22,10 +22,25 @@ namespace Xipton.Razor.UnitTest
 
     
 
-    [TestFixture]
+    [TestClass]
     public class TemplateTest {
 
-        [Test]
+        [TestMethod]
+        public void RelativePathNameIsResolved()
+        {
+            var rm = new RazorMachine();
+            rm.RegisterTemplate("/views/main/index",@"@RenderPage(""aaa/bbb"")");
+            rm.RegisterTemplate("/views/main/aaa/bbb", "this is: /views/main/aaa/bbb");
+            rm.RegisterTemplate("/views/shared/bbb", "this is /views/shared/bbb");
+            rm.RegisterTemplate("/views/shared/aaa/bbb", "this is /views/shared/aaa/bbb");
+            rm.RegisterTemplate("/shared/bbb", "this is /shared/bbb");
+            rm.RegisterTemplate("/shared/aaa/bbb", "this is /shared/aaa/bbb");
+            var t = rm.Execute("/views/main/index");
+            Debug.WriteLine(rm.Execute("/views/main/index"));
+            Assert.IsTrue(t.Result.EndsWith("/views/main/aaa/bbb"));
+        }
+
+        [TestMethod]
         public void AttributeValuesAreBeingWrittenRaw()
         {
             var rm = new RazorMachine();
@@ -45,7 +60,7 @@ must be equal to:
         }
 
 
-        [Test]
+        [TestMethod]
         public void TemplateCanBePreCompiled()
         {
             var rm = new RazorMachine();
@@ -53,7 +68,7 @@ must be equal to:
             rm.EnsureViewCompiled("/yep");
         }
 
-        [Test]
+        [TestMethod]
         public void TemplateAccessorsWork(){
             var content = "any content";
             var rm = new RazorMachine();
@@ -67,7 +82,7 @@ must be equal to:
             Assert.AreEqual(0, templates.Count);
         }
 
-        [Test]
+        [TestMethod]
         public void HelperWorks() {
             var rm = new RazorMachine();
             rm.RegisterTemplate("/1/helper", @"
@@ -105,14 +120,14 @@ must be equal to:
             Debug.WriteLine(result.Result);
         }
 
-        [Test]
+        [TestMethod]
         public void SpacesArePreservedWithinAttributes(){
             var m = new RazorMachine();
             var t = m.ExecuteContent("<Tag attribute=\"@Model.FirstName   @Model.LastName\"></Tag>", new { FirstName = "John", LastName = "Smith" });
             Assert.AreEqual("<Tag attribute=\"John   Smith\"></Tag>", t.Result);
         }
 
-        [Test]
+        [TestMethod]
         public void NestedAnonymousTypesAreSupported(){
             var m = new RazorMachine();
             const string streetName = "Main Street";
@@ -128,7 +143,7 @@ must be equal to:
 
 
 
-        [Test]
+        [TestMethod]
         public void Performance_Uncompiled_vs_Compiled() {
             var rm = new RazorMachine(includeGeneratedSourceCode:false);
             rm.ExecuteContent(Guid.NewGuid().ToString("N")); // to warm up the engine
@@ -155,7 +170,7 @@ must be equal to:
             Console.WriteLine("Elapsed run again {0} times: {1} ms", count, sw.ElapsedMilliseconds == 0 ? "< 1" : sw.ElapsedMilliseconds.ToString());
         }
 
-        [Test]
+        [TestMethod]
         public void Performance_Compiled_Template_Tree() {
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/Parent.cshtml", "@RenderPage(\"Child\") @{var i = (int)ViewBag.Title;}");
@@ -176,7 +191,7 @@ must be equal to:
 
 
 
-        [Test]
+        [TestMethod]
         public void TemplateCanBeExcecutedDirectlyByContent() {
             var rm = new RazorMachine();
             var executedTemplate = rm.ExecuteContent("Hello @Model.FirstName @Model.LastName", new { FirstName = "Dick", LastName = "Tracy" });
@@ -185,7 +200,7 @@ must be equal to:
             Assert.AreEqual("Hello Dick Tracy", executedTemplate.Result);
         }
 
-        [Test]
+        [TestMethod]
         public void TemplateCanBeExcecutedIndirectlyByUrl(){
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/simpleTemplate.cshrml", "Hello @Model.FirstName @Model.LastName");
@@ -199,7 +214,7 @@ must be equal to:
             Assert.AreEqual("Hello Dick Tracy", executedTemplate.Result);
         }
 
-        [Test]
+        [TestMethod]
         public void TemplateCanBeExcecutedIndirectlyByUrlAdOmittingDefaultExtension() {
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/simpleTemplate", "Hello @Model.FirstName @Model.LastName");
@@ -207,7 +222,7 @@ must be equal to:
             Assert.AreEqual("Hello Dick Tracy", executedTemplate.Result);
         }
 
-        [Test]
+        [TestMethod]
         public void ViewStartIsExecuted() {
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/_ViewStart", "@{ViewBag.ViewStartExecuted = true;}");
@@ -217,7 +232,7 @@ must be equal to:
             Assert.AreEqual(true, executedTemplate.ViewBag.ViewStartExecuted); 
         }
 
-        [Test]
+        [TestMethod]
         public void LayoutIsApplied() {
             var rm = new RazorMachine(includeGeneratedSourceCode:true);
             rm.RegisterTemplate("~/Shared/_layout", "Layout says: @RenderBody()");
@@ -233,7 +248,7 @@ must be equal to:
             Assert.AreEqual("Layout says: Hello again Dick Tracy", executedTemplate.Result.Trim());
         }
 
-        [Test]
+        [TestMethod]
         public void RenderPageWorks(){
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/someControl", "Hello @Model.Name");
@@ -244,7 +259,7 @@ must be equal to:
             Assert.AreEqual(t.Result,">>Hello John");
         }
 
-        [Test]
+        [TestMethod]
         public void RecursionErrorWorks() {
             var caught = false;
             try {
@@ -262,7 +277,7 @@ must be equal to:
             Assert.IsTrue(caught);
         }
 
-        [Test]
+        [TestMethod]
         public void LayoutIsAppliedImplicitlyByViewStart() {
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/_ViewStart", "@{/* _ViewStart*/ Layout=\"_layout\";}");
@@ -274,7 +289,7 @@ must be equal to:
             Assert.AreEqual("Layout says: Hello Dick Tracy", executedTemplate.Result.Trim());
         }
 
-        [Test]
+        [TestMethod]
         public void LayoutIsAppliedAndSectionIsAppliedImplicitlyByViewStart() {
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/_ViewStart", @"
@@ -294,7 +309,7 @@ must be equal to:
             Assert.IsTrue(executedTemplate.Result.Trim().StartsWith("Layout says:"));
         }
 
-        [Test]
+        [TestMethod]
         public void SectionWorks() {
             var engine = new RazorMachine()
                 .RegisterTemplate("~/Main", @"
@@ -313,7 +328,7 @@ This is main content")
         }
 
 
-        [Test]
+        [TestMethod]
         public void LastSectionHolds() {
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/_ViewStart", @"
@@ -341,7 +356,7 @@ Hello @Model.FirstName @Model.LastName
 
 
 
-        [Test]
+        [TestMethod]
         public void Html5IsHandled() {
             var rm = new RazorMachine();
             rm.RegisterTemplate("~/Test.cshtml", @"
@@ -360,7 +375,7 @@ Hello @Model.FirstName @Model.LastName
 
         }
 
-        [Test]
+        [TestMethod]
         public void VBWorksAsWell() {
             var config = @"
 <xipton.razor>
