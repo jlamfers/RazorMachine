@@ -1,5 +1,5 @@
 ﻿#region  Microsoft Public License
-/* This code is part of Xipton.Razor v2.6
+/* This code is part of Xipton.Razor v2.6.1
  * (c) Jaap Lamfers, 2013 - jaap.lamfers@xipton.net
  * Licensed under the Microsoft Public License (MS-PL) http://www.microsoft.com/en-us/openness/licenses.aspx#MPL
  */
@@ -19,7 +19,8 @@ namespace Xipton.Razor.Core.Generator
     /// </summary>
     public class SetModelCodeGenerator : SpanCodeGenerator
     {
-        public SetModelCodeGenerator(string modelType){
+        public SetModelCodeGenerator(string modelType)
+        {
             ModelType = modelType;
         }
 
@@ -29,14 +30,23 @@ namespace Xipton.Razor.Core.Generator
             context.GeneratedClass.BaseTypes.Add(new CodeTypeReference(ResolveType(context)));
 
             #region Work Around
-            if (!(context.Host.CodeLanguage is VBRazorCodeLanguage)) 
-                context.GeneratedClass.LinePragma = context.GenerateLinePragma(target, CalculatePadding(target, 0));
+            if (!(context.Host.CodeLanguage is VBRazorCodeLanguage))
+                context.GeneratedClass.LinePragma = context.GenerateLinePragma(target, CalculateSpanPadding(target, 0));
             //else
-                // exclude VBRazorCodeLanguage
-                // with VB I found a problem with the #End ExternalSource directive rendered at the GeneratedClass's end while it should not be rendered
-                // this only effects the compile error report
+            // exclude VBRazorCodeLanguage
+            // with VB I found a problem with the #End ExternalSource directive rendered at the GeneratedClass's end while it should not be rendered
+            // this only effects the compile error report
 
             #endregion
+        }
+
+        //thanks to Marko Lahma
+        private int CalculateSpanPadding(Span target, int generatedStart)
+        {
+            int num = target.Start.CharacterIndex - generatedStart;
+            if (num < 0)
+                num = 0;
+            return num;
         }
 
         protected virtual string ResolveType(CodeGeneratorContext context)
