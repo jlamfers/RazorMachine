@@ -11,7 +11,7 @@ This RazorEngine originally was published at <a href="http://www.codeproject.com
 
 ## Install ##
 
-There is a package available at NuGet. To install RazorMachine using NuGet, run the following command in the <a href="http://docs.nuget.org/docs/start-here/using-the-package-manager-console" target="_blank">Package Manager Console</a>
+There is a package available at <a href="https://www.nuget.org/packages/RazorMachine/" target="_blank">NuGet</a>. To install RazorMachine using NuGet, run the following command in the <a href="http://docs.nuget.org/docs/start-here/using-the-package-manager-console" target="_blank">Package Manager Console</a>
 ```
 PM> Install-Package RazorMachine
 ```
