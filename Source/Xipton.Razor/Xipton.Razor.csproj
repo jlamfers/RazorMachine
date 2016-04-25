@@ -46,7 +46,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libraries\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
@@ -106,12 +106,12 @@
     <Compile Include="Core\TemplateParseException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Libraries\System.Web.Razor.dll" />
     <None Include="Config\xipton.razor.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="web.config">
+    <None Include="packages.config" />
+    <None Include="legacy\web.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Xipton.Razor.Overview.cd" />

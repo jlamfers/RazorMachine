@@ -32,3 +32,10 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+packages/
+[Hh]elp/
+*.scc
+

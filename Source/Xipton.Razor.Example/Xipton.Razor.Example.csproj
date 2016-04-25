@@ -39,9 +39,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Xipton.Razor\Libraries\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,6 +58,7 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Embedded\embeddedTemplate.cshtml" />
+    <None Include="packages.config" />
     <None Include="Views\Reports\_productGrid.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -87,7 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xipton.Razor\Xipton.Razor.csproj">
-      <Project>{3A7A2F2F-0B57-47F9-8E1A-D34ECB961831}</Project>
+      <Project>{3a7a2f2f-0b57-47f9-8e1a-d34ecb961831}</Project>
       <Name>Xipton.Razor</Name>
     </ProjectReference>
   </ItemGroup>

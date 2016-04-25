@@ -27,6 +27,8 @@ namespace Xipton.Razor
         private readonly ConcurrentDictionary<string, string>
             _templateContentToGeneratedVirtualPathMap = new ConcurrentDictionary<string, string>();
 
+        private readonly object _syncroot = new object();
+
         #region Constructors
         public RazorMachine(){
             Context = new RazorContext(new RazorConfig().Initializer.TryInitializeFromConfig().AsReadOnly());
@@ -184,11 +186,17 @@ namespace Xipton.Razor
         }
 
         protected MemoryContentProvider MemoryContentProvider {
-            get {
+            get
+            {
                 var provider = Context.TemplateFactory.ContentManager.TryGetContentProvider<MemoryContentProvider>();
-                if (provider == null)
-                    Context.TemplateFactory.ContentManager.AddContentProvider(provider = new MemoryContentProvider());
-                return provider;
+                if (provider != null) return provider;
+                lock (_syncroot)
+                {
+                    provider = Context.TemplateFactory.ContentManager.TryGetContentProvider<MemoryContentProvider>();
+                    if (provider == null)
+                        Context.TemplateFactory.ContentManager.AddContentProvider(provider = new MemoryContentProvider());
+                    return provider;
+                }
             }
         }
 
