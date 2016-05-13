@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>reactiveui-core</id>
+    <version>3.1.0</version>
+    <description>Razor machine</description>
+    <authors>jlamfers</authors>
+    <projectUrl>https://github.com/jlamfers/RazorMachine</projectUrl>
+    <licenseUrl>http://opensource.org/licenses/ms-pl.html</licenseUrl>
+    <language>en-us</language>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+  </metadata>
+  <files>
+    <file src="Xipton.Razor\bin\release\*.dll" target="lib" />
+  </files>
+</package>
