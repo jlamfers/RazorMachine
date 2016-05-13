@@ -325,7 +325,7 @@ namespace Xipton.Razor.Config {
                 referencedAssemblyFileNames.AddRange(
                     domainAssemblies
                     .Select(assembly => assembly.GetFileName())
-                    .Where(filename => filename.EndsWith(pattern.Substring(1), StringComparison.OrdinalIgnoreCase))
+                    .Where(filename => filename != null && filename.EndsWith(pattern.Substring(1), StringComparison.OrdinalIgnoreCase))
                 );
             }
         }
