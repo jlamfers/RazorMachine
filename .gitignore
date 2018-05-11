@@ -13,7 +13,7 @@ TestResults
 ###################
 *.user
 *.suo
-
+*.vs
 
 # Logs and databases #
 ######################

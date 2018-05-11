@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>reactiveui-core</id>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <description>Razor machine</description>
     <authors>jlamfers</authors>
     <projectUrl>https://github.com/jlamfers/RazorMachine</projectUrl>
