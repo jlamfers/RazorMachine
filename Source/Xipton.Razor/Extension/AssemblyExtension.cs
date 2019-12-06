@@ -21,9 +21,10 @@ namespace Xipton.Razor.Extension
                 ? null
                 : new DirectoryInfo(IsNotWindows ? assembly.CodeBase.Replace("file:///", "/") : assembly.CodeBase.Replace("file:///", string.Empty)).FullName;
 #else
-            return assembly == null
-                ? null
-                : new DirectoryInfo(assembly.CodeBase.Replace("file:///", string.Empty)).FullName;
+            if (assembly == null) return null;
+            var path = assembly.CodeBase.Replace("file:///", string.Empty);
+            path = path.Replace("file://", "//"); // Network drive locations (e.g. \\NetworkLocation\App) have a slightly different format which we will account for here
+            return new DirectoryInfo(path).FullName;
 #endif
 
         }
